@@ -6,19 +6,23 @@ import Tickets from "./pages/Tickets";
 import Profile from "./pages/Profile";
 import BottomNav from "./components/BottomNav";
 import MovieDetail from "./pages/MovieDetail";
+import Booking from "./pages/Booking";
 
 const AppContent = () => {
   const location = useLocation();
-  const hideBottomNav = location.pathname.includes("/movie/");
+  const hideBottomNav = ["/movie/", "/booking/"].some(path => location.pathname.includes(path));
+
+  
 
   return (
-    <div className={hideBottomNav ? "" : "pb-16"}>
+    <div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/movie/:movieId" element={<MovieDetail />} />
         <Route path="/search" element={<Search />} />
         <Route path="/tickets" element={<Tickets />} />
         <Route path="/user" element={<Profile />} />
+        <Route path="/booking/:movieId" element={<Booking />} />
       </Routes>
       {!hideBottomNav && <BottomNav />}
     </div>

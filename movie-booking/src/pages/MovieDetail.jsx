@@ -13,6 +13,7 @@ const MovieDetail = () => {
     const [movie, setMovie] = useState(null);
     const navigate = useNavigate();
     useEffect(() => {
+        window.scrollTo(0, 0);
         const foundMovie = movieData.movies.find(m => m.id === Number(movieId));
         setMovie(foundMovie);
     }, [movieId]);
@@ -33,7 +34,7 @@ const MovieDetail = () => {
             </div>
 
             <button
-                onClick={() => navigate(-1)} // Quay lại trang trước đó
+                onClick={() => navigate(-1)} 
                 className="absolute top-7 left-12 w-[34px] h-[34px] bg-orange-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-orange-600 transition"
             >
                 <CloseCircleOutlined className="text-xl" />
@@ -81,22 +82,30 @@ const MovieDetail = () => {
                         modules={[FreeMode]}
                         className="mt-4 px-4"
                     >
-                        {movie.cast.map((actor, index) => (
-                            <SwiperSlide key={index} className="flex flex-col items-center">
-                                <img
-                                    src={actor.img}
-                                    alt={actor.name}
-                                    className="w-[80px] h-[100px] object-cover rounded-[25px] border-2 border-gray-600 shadow-lg"
-                                />
-                                <span className="text-xs text-gray-300 mt-2 text-center">{actor.name}</span>
-                            </SwiperSlide>
-                        ))}
+                        {movie.cast?.length > 0 ? (
+                            movie.cast.map((actor, index) => (
+                                <SwiperSlide key={index} className="flex flex-col items-center">
+                                    <img
+                                        src={actor.img}
+                                        alt={actor.name}
+                                        className="w-[80px] h-[100px] object-cover rounded-[25px] border-2 border-gray-600 shadow-lg"
+                                    />
+                                    <span className="text-gray-300 mt-2 text-center">{actor.name}</span>
+                                </SwiperSlide>
+                            ))
+                        ) : (
+                            <p className="text-gray-400">No information of cast</p>
+                        )}
+
                     </Swiper>
                 </div>
 
                 <div className="mt-6 flex justify-center">
                     {movie.status !== "upcoming" && (
-                        <button className="bg-orange-500 text-white py-2 px-6 rounded-full text-lg">
+                        <button
+                            className="bg-orange-500 text-white py-2 px-6 rounded-full text-lg"
+                            onClick={() => navigate(`/booking/${movie.id}`)}
+                        >
                             Select Seats
                         </button>
                     )}
