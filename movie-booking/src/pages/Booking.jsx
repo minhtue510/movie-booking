@@ -8,11 +8,26 @@ const Booking = () => {
     const { movieId } = useParams();
     const navigate = useNavigate();
     const movie = movieData.movies.find(m => m.id === Number(movieId));
-    const [totalPrice, setTotalPrice] = useState(0);
-    const [selectedDate, setSelectedDate] = useState("18");
+    const [selectedDate, setSelectedDate] = useState("18 Mon");
     const [selectedTime, setSelectedTime] = useState("14:30");
+    const [selectedSeats, setSelectedSeats] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
+    
+    const halls = {
+        "10:30": "01",
+        "12:30": "02",
+        "14:30": "03",
+        "15:30": "04",
+        "16:30": "05"
+    };
+    
     const dates = ["17 Sun", "18 Mon", "19 Tue", "20 Wed", "21 Thu", "22 Fri"];
-    const times = ["10:30", "12:30", "14:30", "15:30", "16:30"];
+    const times = Object.keys(halls);
+
+    const calculateTotalPrice = (seats) => {
+        setTotalPrice(seats.length * 15);
+    };
+
     if (!movie) {
         return <div className="text-white text-center mt-10">Movie not found!</div>;
     }
@@ -21,11 +36,7 @@ const Booking = () => {
         <div className="bg-black min-h-screen text-white relative flex flex-col items-center">
             <div className="relative w-full">
                 <div className="absolute inset-0 bg-gradient-to-b to-black"></div>
-                <img
-                    src={movie.background}
-                    alt={movie.title}
-                    className="w-full h-[210px] object-cover"
-                />
+                <img src={movie.background} alt={movie.title} className="w-full h-[210px] object-cover" />
             </div>
             <button
                 onClick={() => navigate(-1)}
@@ -38,31 +49,12 @@ const Booking = () => {
 
             <div className="mt-6 flex justify-center w-full">
                 <div className="max-w-lg w-full">
-                    <SeatSelection />
-                </div>
-            </div>
-
-            <div className="flex items-center justify-around w-full max-w-md mt-4 text-sm">
-                <div className="flex items-center gap-1">
-                    <div className="relative w-6 h-6 flex items-center justify-center">
-                        <div className="absolute w-6 h-6 border-2 border-white rounded-full opacity-50"></div>
-                        <div className="w-4 h-4 border border-white rounded-full bg-white"></div>
-                    </div>
-                    <span>Available</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <div className="relative w-6 h-6 flex items-center justify-center">
-                        <div className="absolute w-6 h-6 border-2 border-gray-600 rounded-full opacity-50"></div>
-                        <div className="w-4 h-4 bg-gray-600 rounded-full"></div>
-                    </div>
-                    <span>Taken</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <div className="relative w-6 h-6 flex items-center justify-center">
-                        <div className="absolute w-6 h-6 border-2 border-orange-500 rounded-full opacity-50"></div>
-                        <div className="w-4 h-4 bg-orange-500 rounded-full"></div>
-                    </div>
-                    <span>Selected</span>
+                    <SeatSelection 
+                        onSeatSelect={(seats) => {
+                            setSelectedSeats(seats);
+                            calculateTotalPrice(seats);
+                        }} 
+                    />
                 </div>
             </div>
 
@@ -70,9 +62,9 @@ const Booking = () => {
                 {dates.map((date, index) => (
                     <button
                         key={index}
-                        className={`w-14 h-20 rounded-full flex flex-col items-center justify-center text-md ${date.includes(selectedDate) ? "bg-orange-500" : "bg-black"
+                        className={`w-14 h-20 rounded-full flex flex-col items-center justify-center text-md ${date === selectedDate ? "bg-orange-500" : "bg-black"
                             }`}
-                        onClick={() => setSelectedDate(date.split(" ")[0])}
+                            onClick={() => setSelectedDate(date)} 
                     >
                         {date.split(" ")[0]}
                         <span className="text-xs">{date.split(" ")[1]}</span>
@@ -96,10 +88,30 @@ const Booking = () => {
             <div className="p-6 mt-6 flex justify-around items-center w-full max-w-md">
                 <div className="flex flex-col items-center text-center">
                     <p className="text-gray-400 text-lg">Total Price</p>
-                    <p className="text-white text-xl font-semibold">$15.00</p>
+                    <p className="text-white text-xl font-semibold">${totalPrice}</p>
                 </div>
 
-                <button className="bg-orange-500 w-[165px] h-[46px] text-white font-semibold rounded-full text-lg hover:bg-orange-600 transition">
+                <button
+                    onClick={() => {
+                        const ticketData = { 
+                            movie, 
+                            selectedDate, 
+                            selectedTime, 
+                            hall: halls[selectedTime], 
+                            selectedSeats, 
+                            totalPrice 
+                        };
+
+                        // Lưu vào localStorage
+                        const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
+                        localStorage.setItem("tickets", JSON.stringify([...storedTickets, ticketData]));
+
+                        navigate("/tickets");
+                    }}
+                    disabled={selectedSeats.length === 0} // Vô hiệu hóa nếu chưa chọn ghế
+                    className={`w-[165px] h-[46px] text-white font-semibold rounded-full text-lg transition
+                        ${selectedSeats.length === 0 ? "bg-gray-500 cursor-not-allowed" : "bg-orange-500 hover:bg-orange-600"}`}
+                >
                     Buy Tickets
                 </button>
             </div>

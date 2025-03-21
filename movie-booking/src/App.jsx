@@ -11,9 +11,6 @@ import Booking from "./pages/Booking";
 const AppContent = () => {
   const location = useLocation();
   const hideBottomNav = ["/movie/", "/booking/"].some(path => location.pathname.includes(path));
-
-  
-
   return (
     <div>
       <Routes>
