@@ -13,7 +13,7 @@ const Search = () => {
   
 
   return (
-    <div className="bg-black min-h-screen text-white px-4 pb-6">
+    <div className="bg-black min-h-screen text-white px-8 pb-16">
       <div className="pt-6">
         <SearchBar query={query} setQuery={setQuery} />
       </div>

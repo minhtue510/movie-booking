@@ -3,6 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import movieData from "../data/movies.json";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import SeatSelection from "../components/SeatSelection";
+import availableIcon from "../assets/icon/available.svg";
+import selectedIcon from "../assets/icon/selected.svg";
+import takenIcon from "../assets/icon/taken.svg";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/free-mode";
+import { FreeMode } from "swiper/modules";
 
 const Booking = () => {
     const { movieId } = useParams();
@@ -12,16 +19,18 @@ const Booking = () => {
     const [selectedTime, setSelectedTime] = useState("14:30");
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
-    
+
     const halls = {
         "10:30": "01",
         "12:30": "02",
         "14:30": "03",
         "15:30": "04",
-        "16:30": "05"
+        "16:30": "05",
+        "17:00": "06",
+        "17:30": "07",
     };
-    
-    const dates = ["17 Sun", "18 Mon", "19 Tue", "20 Wed", "21 Thu", "22 Fri"];
+
+    const dates = ["16 Sat", "17 Sun", "18 Mon", "19 Tue", "20 Wed", "21 Thu", "22 Fri", "23 Sat", "24 Sun"];
     const times = Object.keys(halls);
 
     const calculateTotalPrice = (seats) => {
@@ -49,40 +58,74 @@ const Booking = () => {
 
             <div className="mt-6 flex justify-center w-full">
                 <div className="max-w-lg w-full">
-                    <SeatSelection 
+                    <SeatSelection
                         onSeatSelect={(seats) => {
                             setSelectedSeats(seats);
                             calculateTotalPrice(seats);
-                        }} 
+                        }}
                     />
                 </div>
             </div>
 
-            <div className="flex gap-2 mt-6">
-                {dates.map((date, index) => (
-                    <button
-                        key={index}
-                        className={`w-14 h-20 rounded-full flex flex-col items-center justify-center text-md ${date === selectedDate ? "bg-orange-500" : "bg-black"
-                            }`}
-                            onClick={() => setSelectedDate(date)} 
-                    >
-                        {date.split(" ")[0]}
-                        <span className="text-xs">{date.split(" ")[1]}</span>
-                    </button>
-                ))}
+            <div className="flex items-center justify-around w-full max-w-md mt-4 text-sm">
+                <div className="flex items-center gap-1">
+                    <img src={availableIcon} alt="Available" className="w-6 h-6" />
+                    <span>Available</span>
+                </div>
+                <div className="flex items-center gap-1">
+                    <img src={takenIcon} alt="Taken" className="w-6 h-6" />
+                    <span>Taken</span>
+                </div>
+                <div className="flex items-center gap-1">
+                    <img src={selectedIcon} alt="Selected" className="w-6 h-6" />
+                    <span>Selected</span>
+                </div>
             </div>
 
-            <div className="overflow-x-auto whitespace-nowrap no-scrollbar max-w-[90%] flex gap-2 mt-4">
-                {times.map((time, index) => (
-                    <button
-                        key={index}
-                        className={`px-4 py-2 rounded-full text-sm shrink-0 ${time === selectedTime ? "bg-orange-500" : "bg-black border border-white"
-                            }`}
-                        onClick={() => setSelectedTime(time)}
-                    >
-                        {time}
-                    </button>
-                ))}
+
+            <div className="mt-6 w-full">
+                <Swiper
+                    spaceBetween={10}
+                    slidesPerView={5.5}
+                    freeMode={true}
+                    modules={[FreeMode]} // Kích hoạt FreeMode để vuốt tự do
+                    className="w-full"
+                >
+                    {dates.map((date, index) => (
+                        <SwiperSlide key={index} className="flex justify-center">
+                            <button
+                                className={`w-14 h-20 rounded-full flex flex-col items-center justify-center text-md ${date === selectedDate ? "bg-orange-500" : "bg-black"
+                                    }`}
+                                onClick={() => setSelectedDate(date)}
+                            >
+                                {date.split(" ")[0]}
+                                <span className="text-xs">{date.split(" ")[1]}</span>
+                            </button>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+            </div>
+
+            <div className="mt-4 w-full">
+                <Swiper
+                    spaceBetween={10}
+                    slidesPerView={4.5}
+                    freeMode={true}
+                    modules={[FreeMode]}
+                    className="w-full"
+                >
+                    {times.map((time, index) => (
+                        <SwiperSlide key={index} className="flex justify-center">
+                            <button
+                                className={`px-4 py-2 rounded-full text-sm shrink-0 ${time === selectedTime ? "bg-orange-500" : "bg-black border border-white"
+                                    }`}
+                                onClick={() => setSelectedTime(time)}
+                            >
+                                {time}
+                            </button>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             </div>
 
             <div className="p-6 mt-6 flex justify-around items-center w-full max-w-md">
@@ -93,22 +136,21 @@ const Booking = () => {
 
                 <button
                     onClick={() => {
-                        const ticketData = { 
-                            movie, 
-                            selectedDate, 
-                            selectedTime, 
-                            hall: halls[selectedTime], 
-                            selectedSeats, 
-                            totalPrice 
+                        const ticketData = {
+                            movie,
+                            selectedDate,
+                            selectedTime,
+                            hall: halls[selectedTime],
+                            selectedSeats,
+                            totalPrice
                         };
 
-                        // Lưu vào localStorage
                         const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
                         localStorage.setItem("tickets", JSON.stringify([...storedTickets, ticketData]));
 
                         navigate("/tickets");
                     }}
-                    disabled={selectedSeats.length === 0} // Vô hiệu hóa nếu chưa chọn ghế
+                    disabled={selectedSeats.length === 0}
                     className={`w-[165px] h-[46px] text-white font-semibold rounded-full text-lg transition
                         ${selectedSeats.length === 0 ? "bg-gray-500 cursor-not-allowed" : "bg-orange-500 hover:bg-orange-600"}`}
                 >
