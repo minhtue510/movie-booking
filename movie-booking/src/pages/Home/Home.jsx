@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import SearchBar from "../components/SearchBar";
-import MovieSection from "../components/MovieSection";
-import BottomNav from "../components/BottomNav";
-import moviesData from "../data/movies.json"; 
+import SearchBar from "../../components/SearchBar";
+import MovieSection from "../../components/MovieSection";
+import BottomNav from "../../components/BottomNav";
+import moviesData from "../../data/movies.json";
 
 const Home = () => {
   const [movies, setMovies] = useState({ nowPlaying: [], upcoming: [], popular: [] });
@@ -15,7 +15,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="bg-black min-h-screen text-white px-4 ">
+    <div className="bg-black min-h-screen text-white px-4 pb-16">
       <div className="pt-6">
         <SearchBar />
       </div>

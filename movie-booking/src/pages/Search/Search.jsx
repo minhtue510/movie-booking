@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "../components/SearchBar";
-import moviesData from "../data/movies.json";
+import SearchBar from "../../components/SearchBar";
+import moviesData from "../../data/movies.json";
 
 const Search = () => {
   const [query, setQuery] = useState("");

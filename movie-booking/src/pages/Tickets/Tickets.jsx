@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ClockCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
+import "../Tickets/Tickets.css";
 const Tickets = () => {
   const [tickets, setTickets] = useState([]);
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const Tickets = () => {
       row: getRowAndSeat(ticket.selectedSeats).row,
       seats: getRowAndSeat(ticket.selectedSeats).seatNumbers,
     });
+
   };
 
   return (
@@ -50,7 +52,7 @@ const Tickets = () => {
       <h1 className="text-xl font-bold pb-4">My Ticket</h1>
       <button
         onClick={() => navigate(-1)}
-        className="absolute top-4 left-12 w-[34px] h-[34px] bg-orange-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-orange-600 transition"
+        className="absolute top-4 left-12 w-[34px] h-[34px] bg-[#FF5524] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#FF5524] transition"
       >
         <CloseCircleOutlined className="text-xl" />
       </button>
@@ -58,18 +60,18 @@ const Tickets = () => {
         <p className="text-gray-400">No ticket booked yet.</p>
       ) : (
         <div className="flex-1 flex flex-col items-center w-full">
-          <div className="bg-orange-500 rounded-3xl w-[85%] max-w-[350px] h-[95%] flex flex-col items-center relative shadow-2xl pb-4">
+          <div className="bg-[#FF5524] rounded-3xl w-[85%] max-w-[350px] h-[90%] flex flex-col items-center relative shadow-2xl pb-4">
             <div className="relative w-full h-[80%] rounded-t-3xl overflow-hidden shadow-lg">
               <img
                 src={tickets[0].movie.background}
                 alt={tickets[0].movie.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-fill"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-orange-500"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#FF5524]"></div>
             </div>
-            <div className="w-full h-[10vh] bg-orange-500 text-center py-4 border-t-6 border-dashed border-black relative">
-              <div className="absolute -left-8 top-[-30px] w-16 h-16 bg-black rounded-full"></div>
-              <div className="absolute -right-8 top-[-30px] w-16 h-16 bg-black rounded-full"></div>
+            <div className="w-full h-[10vh]  bg-[#FF5524] text-center py-4 border-t-2 border-dashed border-black relative">
+              <div className="absolute -left-8 top-[-35px] w-16 h-16 bg-black rounded-full"></div>
+              <div className="absolute -right-8 top-[-35px] w-16 h-16 bg-black rounded-full"></div>
               <div className="flex items-center gap-10 w-full justify-center mt-3">
                 <div className="flex flex-col items-center text-white gap-2">
                   <p className="font-bold text-3xl leading-none">{tickets[0].selectedDate.split(" ")[0]}</p>

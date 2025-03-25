@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import homeIcon from "../assets/icon/home.jpg";
 import searchIcon from "../assets/icon/search.jpg";
@@ -8,9 +8,21 @@ import userIcon from "../assets/icon/user.jpg";
 const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  if (!isMobile) return null; // Ẩn nếu không phải màn hình mobile
 
   const navItems = [
-    { path: "/", icon: homeIcon, label: "Home" },
+    { path: "/home", icon: homeIcon, label: "Home" },
     { path: "/search", icon: searchIcon, label: "Search" },
     { path: "/history", icon: ticketIcon, label: "Tickets" },
     { path: "/profile", icon: userIcon, label: "User" },
@@ -22,7 +34,7 @@ const BottomNav = () => {
         <button key={path} onClick={() => navigate(path)} className="relative">
           <div
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 ${
-              location.pathname === path ? "bg-orange-500 text-white" : "text-gray-400"
+              location.pathname === path ? "bg-[#FF5524] text-white" : "text-gray-400"
             }`}
           >
             <img src={icon} alt={label} className="w-6 h-6 object-contain" />

@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { UserOutlined, InfoCircleOutlined, SettingOutlined } from "@ant-design/icons";
-import logoutIcon from "../assets/icon/logout.png";
-import avatar from "../assets/images/avatar.png";
+import logoutIcon from "../../assets/icon/logout.png";
+import avatar from "../../assets/images/avatar.png";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const navigate = useNavigate();
     const showModal = () => setIsModalOpen(true);
     const handleOk = () => {
-        setIsModalOpen(false);
-        console.log("User logged out");
+        setIsModalOpen(false); 
+        navigate("/login");
     };
     const handleCancel = () => setIsModalOpen(false);
 
@@ -33,8 +34,8 @@ const Profile = () => {
                         <div className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center text-2xl font-bold mx-auto">?</div>
                         <p className="mt-4 text-lg font-semibold">Are you sure you want to log out?</p>
                         <div className="w-full mt-6 border-t border-gray-500 flex">
-                            <button onClick={handleCancel} className="flex-1 py-3 text-red-500 font-semibold border-r border-gray-500">Cancel</button>
-                            <button onClick={handleOk} className="flex-1 py-3 text-orange-600 font-semibold">OK</button>
+                            <button onClick={handleCancel} className="flex-1 py-3 text-[#FF5524] font-semibold border-r border-gray-500">Cancel</button>
+                            <button onClick={handleOk} className="flex-1 py-3 text-[#FF5524] font-semibold">OK</button>
                         </div>
                     </div>
                 </div>
@@ -61,8 +62,8 @@ const MenuItem = ({ icon, title, subtitle }) => (
 const MenuItemLogout = ({ icon, title, onClick }) => (
     <div className="flex items-center gap-4 px-4 py-3 hover:bg-gray-800 cursor-pointer transition" onClick={onClick}>
         <div className="text-2xl">{icon}</div>
-        <p className="text-orange-500 font-semibold flex-1">{title}</p>
-        <span className="text-orange-500 text-4xl">
+        <p className="text-[#FF5524] font-semibold flex-1">{title}</p>
+        <span className="text-[#FF5524] text-4xl">
             ›
         </span>
     </div>

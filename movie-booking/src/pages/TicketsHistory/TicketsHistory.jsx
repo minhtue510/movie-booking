@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import ticketsData from "../data/tickets.json"; // Import dữ liệu từ JSON
+import ticketsData from "../../data/tickets.json"; 
 
 const TicketHistory = () => {
   const navigate = useNavigate();
@@ -22,7 +22,6 @@ const TicketHistory = () => {
               className="w-[166px] h-[250px] object-cover rounded-lg shadow-md"
             />
             <p className="text-sm text-center mt-2 font-bold">{ticket.movieTitle}</p>
-            {/* <p className="text-xs text-center">{ticket.date} - {ticket.time} - Ghế {ticket.seat}</p> */}
           </div>
         ))}
       </div>

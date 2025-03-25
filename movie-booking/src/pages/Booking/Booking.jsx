@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import movieData from "../data/movies.json";
+import movieData from "../../data/movies.json";
 import { CloseCircleOutlined } from "@ant-design/icons";
-import SeatSelection from "../components/SeatSelection";
-import availableIcon from "../assets/icon/available.svg";
-import selectedIcon from "../assets/icon/selected.svg";
-import takenIcon from "../assets/icon/taken.svg";
+import SeatSelection from "../../components/SeatSelection";
+import availableIcon from "../../assets/icon/available.svg";
+import selectedIcon from "../../assets/icon/selected.svg";
+import takenIcon from "../../assets/icon/taken.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -30,7 +30,7 @@ const Booking = () => {
         "17:30": "07",
     };
 
-    const dates = ["16 Sat", "17 Sun", "18 Mon", "19 Tue", "20 Wed", "21 Thu", "22 Fri", "23 Sat", "24 Sun"];
+    const dates = ["17 Sun", "18 Mon", "19 Tue", "20 Wed", "21 Thu", "22 Fri", "23 Sat", "24 Sun"];
     const times = Object.keys(halls);
 
     const calculateTotalPrice = (seats) => {
@@ -49,7 +49,7 @@ const Booking = () => {
             </div>
             <button
                 onClick={() => navigate(-1)}
-                className="absolute top-7 left-12 w-[34px] h-[34px] bg-orange-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-orange-600 transition"
+                className="absolute top-7 left-12 w-[34px] h-[34px] bg-[#FF5524] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#FF5524] transition"
             >
                 <CloseCircleOutlined className="text-xl" />
             </button>
@@ -94,7 +94,7 @@ const Booking = () => {
                     {dates.map((date, index) => (
                         <SwiperSlide key={index} className="flex justify-center">
                             <button
-                                className={`w-14 h-20 rounded-full flex flex-col items-center justify-center text-md ${date === selectedDate ? "bg-orange-500" : "bg-black"
+                                className={`w-14 h-20 rounded-full flex flex-col items-center justify-center text-md ${date === selectedDate ? "bg-[#FF5524]" : "bg-black"
                                     }`}
                                 onClick={() => setSelectedDate(date)}
                             >
@@ -117,7 +117,7 @@ const Booking = () => {
                     {times.map((time, index) => (
                         <SwiperSlide key={index} className="flex justify-center">
                             <button
-                                className={`px-4 py-2 rounded-full text-sm shrink-0 ${time === selectedTime ? "bg-orange-500" : "bg-black border border-white"
+                                className={`px-4 py-2 rounded-full text-sm shrink-0 ${time === selectedTime ? "bg-[#FF5524]" : "bg-black border border-white"
                                     }`}
                                 onClick={() => setSelectedTime(time)}
                             >
@@ -147,12 +147,11 @@ const Booking = () => {
 
                         const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
                         localStorage.setItem("tickets", JSON.stringify([...storedTickets, ticketData]));
-
                         navigate("/tickets");
                     }}
                     disabled={selectedSeats.length === 0}
                     className={`w-[165px] h-[46px] text-white font-semibold rounded-full text-lg transition
-                        ${selectedSeats.length === 0 ? "bg-gray-500 cursor-not-allowed" : "bg-orange-500 hover:bg-orange-600"}`}
+                        ${selectedSeats.length === 0 ? "bg-gray-500 cursor-not-allowed" : "bg-[#FF5524] hover:bg-[#FF5524]"}`}
                 >
                     Buy Tickets
                 </button>

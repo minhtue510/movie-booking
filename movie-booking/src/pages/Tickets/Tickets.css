@@ -1,0 +1,17 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+@import "tailwindcss";
+
+@layer components {
+    .text {
+      @apply flex flex-col items-center;
+    }
+  
+    .ticket-info-title {
+      @apply text-white font-semibold text-xl;
+    }
+  
+    .ticket-info-value {
+      @apply text-center text-sm;
+    }
+  }

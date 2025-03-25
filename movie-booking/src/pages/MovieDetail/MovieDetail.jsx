@@ -5,7 +5,7 @@ import "swiper/css/pagination";
 import { FreeMode } from "swiper/modules";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import movieData from "../data/movies.json";
+import movieData from "../../data/movies.json";
 import { ClockCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 const MovieDetail = () => {
@@ -35,7 +35,7 @@ const MovieDetail = () => {
 
             <button
                 onClick={() => navigate(-1)} 
-                className="absolute top-7 left-12 w-[34px] h-[34px] bg-orange-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-orange-600 transition"
+                className="absolute top-7 left-12 w-[34px] h-[34px] bg-[#FF5524] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#FF5524] transition"
             >
                 <CloseCircleOutlined className="text-xl" />
             </button>
@@ -103,7 +103,7 @@ const MovieDetail = () => {
                 <div className="mt-6 flex justify-center">
                     {movie.status !== "upcoming" && (
                         <button
-                            className="bg-orange-500 text-white py-2 px-6 rounded-full text-lg"
+                            className="bg-[#FF5524] text-white py-2 px-6 rounded-full text-lg"
                             onClick={() => navigate(`/booking/${movie.id}`)}
                         >
                             Select Seats
