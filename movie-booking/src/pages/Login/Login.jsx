@@ -6,11 +6,26 @@ import googleBtn from "../../assets/images/google.png";
 import appleBtn from "../../assets/images/apple.png";
 import facebookBtn from "../../assets/images/facebook.png";
 import { useNavigate } from "react-router-dom";
+import { AuthUser } from "../../services/AuthUser";
+
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState("");
     const navigate = useNavigate();
+
+    const handleLogin = async () => {
+        setError("");
+        try {
+            const userData = await AuthUser.login(username, password);
+            console.log("Đăng nhập thành công:", userData);
+            navigate("/home");
+        } catch (err) {
+            setError(err.message || "Sai thông tin đăng nhập");
+        }
+    };
+
     return (
         <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative">
             <div className="absolute top-0 left-0 w-full h-[30%]">
@@ -22,9 +37,9 @@ const Login = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black"></div>
             </div>
 
-            <div className="w-full max-w-xs text-center relative z-10 mt-[50%]">
+            <div className="w-full max-w-xs text-center relative z-10 mt-[30%]">
                 <h1 className="text-3xl font-semibold">Welcome Back!</h1>
-                <p className="text-gray-400 text-sm mt-1">welcome back we missed you</p>
+                <p className="text-gray-400 text-sm mt-1">Welcome back, we missed you</p>
 
                 <div className="mt-6 text-left">
                     <label className="block text-sm font-semibold">Username</label>
@@ -64,12 +79,11 @@ const Login = () => {
                     </div>
                 </div>
 
-                <div className="text-right text-sm text-gray-400 mt-2 cursor-pointer hover:text-gray-300">
-                    Forgot Password?
-                </div>
+                {error && <p className="text-[#FF5524] text-sm mt-5 justify-center">{error}</p>}
 
-                <button className="mt-6 w-full py-2 bg-gradient-to-r from-[#4D1C09] to-[#FFD980] rounded-xl text-lg font-semibold cursor-pointer"
-                    onClick={() => navigate("/home")}
+                <button
+                    className="mt-6 w-full py-2 bg-gradient-to-r from-[#4D1C09] to-[#FFD980] rounded-xl text-lg font-semibold cursor-pointer"
+                    onClick={handleLogin}
                 >
                     Sign in
                 </button>
@@ -82,19 +96,13 @@ const Login = () => {
 
                 <div className="flex justify-center space-x-4 ">
                     <button className=" p-3 rounded-lg">
-                        <img
-                            src={googleBtn}
-                        />
+                        <img src={googleBtn} />
                     </button>
                     <button className="p-3 rounded-lg">
-                        <img
-                            src={appleBtn}
-                        />
+                        <img src={appleBtn} />
                     </button>
                     <button className=" p-3 rounded-lg">
-                        <img
-                            src={facebookBtn}
-                        />
+                        <img src={facebookBtn} />
                     </button>
                 </div>
 

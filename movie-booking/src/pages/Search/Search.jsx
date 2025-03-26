@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/SearchBar";
 import moviesData from "../../data/movies.json";
-
+import BottomNav from "../../components/BottomNav";
 const Search = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Search = () => {
   
 
   return (
-    <div className="bg-black min-h-screen text-white px-8 pb-16">
+    <div className="bg-black min-h-screen text-white px-10 pb-16">
       <div className="pt-6">
         <SearchBar query={query} setQuery={setQuery} />
       </div>
@@ -33,8 +33,11 @@ const Search = () => {
             <p className="text-sm text-center mt-2">{movie.title}</p>
           </div>
         ))}
+        <BottomNav />
       </div>
+      
     </div>
+
   );
 };
 

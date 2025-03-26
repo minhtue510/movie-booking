@@ -19,7 +19,7 @@ const BottomNav = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  if (!isMobile) return null; // Ẩn nếu không phải màn hình mobile
+  if (!isMobile) return null; 
 
   const navItems = [
     { path: "/home", icon: homeIcon, label: "Home" },

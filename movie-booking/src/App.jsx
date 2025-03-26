@@ -11,6 +11,7 @@ import TicketsHistory from "./pages/TicketsHistory/TicketsHistory";
 import SignUp from "./pages/SignUp/SignUp";
 import Login from "./pages/Login/Login";
 import TicketDetail from "./pages/TicketDetail/TicketDetail";
+
 const AppContent = () => {
   const location = useLocation();
   const hideBottomNav = ["/movie/", "/booking/", "/tickets", "/signup", "/login", "/"].some(path => location.pathname.includes(path));
@@ -22,7 +23,7 @@ const AppContent = () => {
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/movie/:movieId" element={<MovieDetail />} />
+        <Route path="/movies/:movieId" element={<MovieDetail />} />
         <Route path="/search" element={<Search />} />
         <Route path="/tickets" element={<Tickets />} />
         <Route path="/profile" element={<Profile />} />

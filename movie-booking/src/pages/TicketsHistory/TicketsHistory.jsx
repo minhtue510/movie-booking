@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import ticketsData from "../../data/tickets.json"; 
+import BottomNav from "../../components/BottomNav";
 
 const TicketHistory = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const TicketHistory = () => {
           </div>
         ))}
       </div>
+      <BottomNav/>
     </div>
   );
 };

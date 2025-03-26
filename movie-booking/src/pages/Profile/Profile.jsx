@@ -3,13 +3,14 @@ import { UserOutlined, InfoCircleOutlined, SettingOutlined } from "@ant-design/i
 import logoutIcon from "../../assets/icon/logout.png";
 import avatar from "../../assets/images/avatar.png";
 import { useNavigate } from "react-router-dom";
+import BottomNav from "../../components/BottomNav";
 
 const Profile = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
     const showModal = () => setIsModalOpen(true);
     const handleOk = () => {
-        setIsModalOpen(false); 
+        setIsModalOpen(false);
         navigate("/login");
     };
     const handleCancel = () => setIsModalOpen(false);
@@ -40,10 +41,7 @@ const Profile = () => {
                     </div>
                 </div>
             )}
-
-
-
-
+            <BottomNav />
         </div>
     );
 };
