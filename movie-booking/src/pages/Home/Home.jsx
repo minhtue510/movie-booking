@@ -9,25 +9,34 @@ const Home = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch("http://minhtue-001-site1.ktempurl.com/api/movies");
-        const result = await response.json();
+        let allMovies = [];
+        let page = 1;
+        let totalPages = 1;
 
-        if (!result || !Array.isArray(result.data)) {
-          throw new Error("Dữ liệu từ API không hợp lệ");
-        }
+        do {
+          const response = await fetch(`http://minhtue-001-site1.ktempurl.com/api/movies?page=${page}&pageSize=10`);
+          const result = await response.json();
 
-        const formattedMovies = result.data.map(movie => ({
-          id: movie.movieId,
-          title: movie.title,
-          rating: movie.rating || 0,
-          genres: movie.genres.length ? movie.genres : [],
-          image: movie.imageMovie.length ? movie.imageMovie[0] : "https://via.placeholder.com/200x300?text=No+Image",
-          status: movie.status.toLowerCase() 
-        }));
+          if (!result || !Array.isArray(result.data)) {
+            throw new Error("Dữ liệu từ API không hợp lệ");
+          }
 
-        const nowPlaying = formattedMovies.filter(movie => movie.status === "playing");
-        const upcoming = formattedMovies.filter(movie => movie.status === "upcoming");
-        const popular = nowPlaying.filter(movie => movie.rating >= 7.5); 
+          allMovies = [...allMovies, ...result.data.map(movie => ({
+            id: movie.movieId,
+            title: movie.title,
+            rating: movie.rating || 0,
+            genres: movie.genres.length ? movie.genres : [],
+            image: movie.imageMovie.length ? movie.imageMovie[0] : "https://via.placeholder.com/200x300?text=No+Image",
+            status: movie.status.toLowerCase(),
+          }))];
+
+          totalPages = result.totalPages;
+          page++;
+        } while (page <= totalPages);
+
+        const nowPlaying = allMovies.filter(movie => movie.status === "playing");
+        const upcoming = allMovies.filter(movie => movie.status === "upcoming");
+        const popular = allMovies.filter(movie => movie.rating >= 7.0);
 
         setMovies({ nowPlaying, upcoming, popular });
       } catch (error) {
@@ -40,7 +49,7 @@ const Home = () => {
 
   return (
     <div className="bg-black min-h-screen text-white px-8 pb-16">
-      <div className="pt-6">
+      <div className="p-4">
         <SearchBar />
       </div>
       <MovieSection title="Now Playing" movies={movies.nowPlaying} />

@@ -1,46 +1,47 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/free-mode";
+import { getMovieCast } from "../services/getMovies";
 
-// const API_KEY = "bcafdf5ae48f17e65499d8f7e196bc4c";
-// const BASE_URL = "https://api.themoviedb.org/3";
+const MovieCast = ({ movieId }) => {
+    const [cast, setCast] = useState([]);
 
-// const MovieCast = ({ movieId }) => {
-//   const [cast, setCast] = useState([]);
+    useEffect(() => {
+        const fetchCast = async () => {
+            const data = await getMovieCast(movieId);
+            setCast(data);
+        };
 
-//   useEffect(() => {
-//     const fetchCast = async () => {
-//       try {
-//         const response = await axios.get(`${BASE_URL}/movie/${movieId}/credits`, {
-//           params: { api_key: API_KEY },
-//         });
+        if (movieId) fetchCast();
+    }, [movieId]);
 
-//         setCast(response.data.cast.slice(0, 5)); // Lấy 5 diễn viên đầu
-//       } catch (error) {
-//         console.error("Lỗi khi lấy danh sách diễn viên:", error);
-//       }
-//     };
+    return (
+        <Swiper
+            slidesPerView={5}
+            spaceBetween={10}
+            freeMode={true}
+            modules={[FreeMode]}
+            className="mt-4 "
+        >
+            {cast.length > 0 ? (
+                cast.map((actor) => (
+                    <SwiperSlide key={actor.id} className="flex flex-col items-center">
+                        <img
+                            src={actor.image}
+                            alt={actor.name}
+                            className="w-[80px] h-[90px] object-cover rounded-[50px] border-2 border-gray-600 shadow-lg"
+                        />
+                        <span className="text-gray-300 mt-2 text-center">{actor.name}</span>
+                        <p className="text-xs text-gray-400 text-center">{actor.role}</p>
+                    </SwiperSlide>
+                ))
+            ) : (
+                <p className="text-gray-400">No cast information available.</p>
+            )}
+        </Swiper>
+    );
+};
 
-//     fetchCast();
-//   }, [movieId]);
-
-//   return (
-//     <div className="mt-6">
-//       <h2 className="text-lg font-semibold text-center">Diễn viên</h2>
-//       <div className="flex justify-center gap-4 mt-3">
-//         {cast.map((actor) => (
-//           <div key={actor.id} className="text-center">
-//             <img
-//               src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
-//               alt={actor.name}
-//               className="w-20 h-20 rounded-full object-cover border border-gray-700"
-//             />
-//             <p className="text-white mt-2 text-sm">{actor.name}</p>
-//             <p className="text-gray-400 text-xs">{actor.character}</p>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default MovieCast;
+export default MovieCast;

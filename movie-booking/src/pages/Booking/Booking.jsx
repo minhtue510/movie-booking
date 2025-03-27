@@ -88,7 +88,7 @@ const Booking = () => {
                     spaceBetween={10}
                     slidesPerView={5.5}
                     freeMode={true}
-                    modules={[FreeMode]} // Kích hoạt FreeMode để vuốt tự do
+                    modules={[FreeMode]}
                     className="w-full"
                 >
                     {dates.map((date, index) => (
