@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { AuthUser } from "../../services/AuthUser";
 import background from "../../assets/images/background.png";
 import passwordIcon from "../../assets/icon/password.png";
-import googleBtn from "../../assets/images/google.png";
-import appleBtn from "../../assets/images/apple.png";
-import facebookBtn from "../../assets/images/facebook.png";
+import googleBtn from "../../assets/icon/google.png";
+import appleBtn from "../../assets/icon/apple.png";
+import facebookBtn from "../../assets/icon/facebook.png";
+import "../../pages/SignUp/SignUp.css";
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
@@ -66,10 +67,10 @@ const SignUp = () => {
     return (
         <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative">
             <div className="absolute top-0 left-0 w-full h-[15%]">
-                <img 
-                src={background} 
-                alt="Background" 
-                className="w-full h-full" />
+                <img
+                    src={background}
+                    alt="Background"
+                    className="w-full h-full" />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black"></div>
             </div>
 
@@ -78,7 +79,7 @@ const SignUp = () => {
                 <p className="text-gray-400 text-sm mt-1">Free Forever. No Credit Card Needed</p>
 
                 <div className="mt-6 text-left">
-                    <label className="block text-sm font-semibold">Email Address</label>
+                    <label className="block text-sm font-semibold text-[#A4A4A4]">Email Address</label>
                     <div className="relative mt-1">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
                             <MailOutlined />
@@ -95,7 +96,7 @@ const SignUp = () => {
                 </div>
 
                 <div className="mt-4 text-left">
-                    <label className="block text-sm font-semibold">Your Name</label>
+                    <label className="block text-sm font-semibold text-[#A4A4A4]">Your Name</label>
                     <div className="relative mt-1">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
                             <UserOutlined />
@@ -114,7 +115,7 @@ const SignUp = () => {
 
 
                 <div className="mt-4 text-left">
-                    <label className="block text-sm font-semibold">Password</label>
+                    <label className="block text-sm font-semibold text-[#A4A4A4]" >Password</label>
                     <div className="relative mt-1">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                             <img src={passwordIcon} alt="password" className="w-4 h-4" />
@@ -137,7 +138,7 @@ const SignUp = () => {
                 </div>
 
                 <div className="mt-4 text-left">
-                    <label className="block text-sm font-semibold">Confirm Password</label>
+                    <label className="block text-sm font-semibold text-[#A4A4A4]">Confirm Password</label>
                     <div className="relative mt-1">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                             <img src={passwordIcon} alt="password" className="w-4 h-4" />
@@ -165,23 +166,24 @@ const SignUp = () => {
                 >
                     Sign up
                 </button>
-                <div className="my-4 text-gray-400 flex items-center justify-center text-sm">
+                <div className="my-4 text-[#A4A4A4] flex items-center justify-center text-sm">
                     <span className="w-1/4 border-t border-white"></span>
-                    <span className="mx-3">Or continue with</span>
+                    <span className="mx-3 ">Or continue with</span>
                     <span className="w-1/4 border-t border-white"></span>
                 </div>
 
-                <div className="flex justify-center space-x-4 ">
-                    <button className=" p-3 rounded-lg">
-                        <img src={googleBtn} />
+                <div className="btn-container">
+                    <button className="btn-social">
+                        <img src={googleBtn} alt="Google" />
                     </button>
-                    <button className="p-3 rounded-lg">
-                        <img src={appleBtn} />
+                    <button className="btn-social">
+                        <img src={appleBtn} alt="Apple" />
                     </button>
-                    <button className=" p-3 rounded-lg">
-                        <img src={facebookBtn} />
+                    <button className="btn-social w-8 h-8">
+                        <img src={facebookBtn} alt="Facebook" />
                     </button>
                 </div>
+
                 <div className="mt-6 text-sm text-gray-400 cursor-pointer hover:text-gray-300"
                     onClick={() => navigate("/login")}
                 >

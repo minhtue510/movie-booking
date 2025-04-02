@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { UserOutlined, EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import background from "../../assets/images/background.png";
 import passwordIcon from "../../assets/icon/password.png";
-import googleBtn from "../../assets/images/google.png";
-import appleBtn from "../../assets/images/apple.png";
-import facebookBtn from "../../assets/images/facebook.png";
+import googleBtn from "../../assets/icon/google.png";
+import appleBtn from "../../assets/icon/apple.png";
+import facebookBtn from "../../assets/icon/facebook.png";
 import { useNavigate } from "react-router-dom";
 import { AuthUser } from "../../services/AuthUser";
+import "../../pages/Login/Login.css";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -42,7 +43,7 @@ const Login = () => {
                 <p className="text-gray-400 text-sm mt-1">Welcome back, we missed you</p>
 
                 <div className="mt-6 text-left">
-                    <label className="block text-sm font-semibold">Username</label>
+                    <label className="block text-sm font-semibold text-[#A4A4A4]">Username</label>
                     <div className="relative mt-1">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
                             <UserOutlined />
@@ -58,7 +59,7 @@ const Login = () => {
                 </div>
 
                 <div className="mt-4 text-left">
-                    <label className="block text-sm font-semibold">Password</label>
+                    <label className="block text-sm font-semibold text-[#A4A4A4]">Password</label>
                     <div className="relative mt-1">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                             <img src={passwordIcon} alt="password" className="w-4 h-4" />
@@ -94,17 +95,18 @@ const Login = () => {
                     <span className="w-1/4 border-t border-white"></span>
                 </div>
 
-                <div className="flex justify-center space-x-4 ">
-                    <button className=" p-3 rounded-lg">
-                        <img src={googleBtn} />
+                <div className="btn-container">
+                    <button className="btn-social">
+                        <img src={googleBtn} alt="Google" />
                     </button>
-                    <button className="p-3 rounded-lg">
-                        <img src={appleBtn} />
+                    <button className="btn-social">
+                        <img src={appleBtn} alt="Apple" />
                     </button>
-                    <button className=" p-3 rounded-lg">
-                        <img src={facebookBtn} />
+                    <button className="btn-social w-8 h-8">
+                        <img src={facebookBtn} alt="Facebook" />
                     </button>
                 </div>
+
 
                 <div
                     className="mt-6 text-sm text-gray-400 cursor-pointer hover:text-gray-300"

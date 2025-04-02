@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ClockCircleOutlined, CloseCircleOutlined, PlayCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import { format } from "date-fns";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
-import { FreeMode } from "swiper/modules";
 import { getMovieDetail, getMovieMedia } from "../../services/getMovies";
 import MovieCast from "../../components/MovieCast";
+import { Skeleton } from "antd";
+
 
 const MovieDetail = () => {
     const { movieId } = useParams();
@@ -42,15 +42,34 @@ const MovieDetail = () => {
         fetchMovieDetails();
     }, [movieId]);
 
-    if (error || !movie) return <div className="bg-black"> {error || ""}</div>;
+    const handleBooking = () => {
+        navigate(`/booking/${movie.id}`, {
+            state: {
+                title: movie.title,
+                image: movie.image,
+                background: movie.background
+            }
+        });
+    };
+
+    if (error) return <div className="bg-black text-white text-center py-10">{error}</div>;
+    if (!movie) {
+        return (
+            <div className="bg-black min-h-screen text-white p-6">
+                <Skeleton active title={{ width: "60%" }} paragraph={{ rows: 3 }} />
+                {/* <Skeleton.Image className="w-[256px] h-[353px] mx-auto my-6" /> */}
+                <Skeleton.Button active className="w-full h-10" />
+            </div>
+        );
+    }
+
 
     return (
         <div className="bg-black min-h-screen text-white relative">
-
             <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black"></div>
                 {movie.background && (
-                    <img src={movie.background} alt={movie.title} className="w-full h-[300px] object-fill" />
+                    <img src={movie.background} className="w-full h-[350px] object-fill" />
                 )}
             </div>
             <button onClick={() => navigate(-1)} className="absolute top-6 left-6 w-10 h-10 bg-[#FF5524] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#FF5524] transition">
@@ -62,8 +81,9 @@ const MovieDetail = () => {
                     <img src={movie.image} alt={movie.title} className="w-[256px] h-[353px] rounded-lg shadow-xl" />
                 )}
             </div>
-            <div className="p-6 mt-[115px]">
-                <div className="flex items-center justify-center text-gray-300 mt-3 gap-1">
+
+            <div className="p-6 mt-[90px]">
+                <div className="flex items-center justify-center text-gray-300 gap-2">
                     <ClockCircleOutlined className="text-white text-lg mr-1" />
                     <span>{movie.duration}</span>
                 </div>
@@ -106,7 +126,7 @@ const MovieDetail = () => {
                             <iframe
                                 src={`${trailerURL}`}
                                 className="w-full h-[300px] sm:h-[400px] md:h-[500px]"
-                                allowFullScreen                   
+                                allowFullScreen
                                 playsInline
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             ></iframe>
@@ -116,12 +136,12 @@ const MovieDetail = () => {
                 <p className="text-gray-300 text-sm mt-4">{movie.description}</p>
                 <div className="mt-6">
                     <h2 className="text-lg font-bold">Top Cast</h2>
-                     <MovieCast movieId={movieId} />
+                    <MovieCast movieId={movieId} />
                 </div>
 
                 <div className="mt-6 flex justify-center">
                     {movie.status !== "upcoming" && (
-                        <button className="bg-[#FF5524] text-white py-2 px-6 rounded-full text-lg shadow-lg hover:bg-[#E0451A] transition duration-300" onClick={() => navigate(`/booking/${movie.id}`)}>
+                        <button className="bg-[#FF5524] text-white py-2 px-6 rounded-full text-lg shadow-lg hover:bg-[#E0451A] transition duration-300" onClick={handleBooking}>
                             Select Seats
                         </button>
                     )}

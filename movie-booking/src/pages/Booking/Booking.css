@@ -1,0 +1,46 @@
+
+.past-date {
+    background-color: #2d2d2d;
+    color: #6b6b6b;
+    cursor: not-allowed;
+  }
+  
+  .default-date {
+    background-color: #000000;
+    color: #b3b3b3;
+  }
+  
+  .selected-date {
+    background-color: #FF5524;
+    color: white;
+  }
+  
+  .past-time {
+    background-color: #2d2d2d;
+    color: #6b6b6b;
+    cursor: not-allowed;
+  }
+  
+  .default-time {
+    background-color: #000000;
+    color: #b3b3b3;
+  }
+  
+  .selected-time {
+    background-color: #FF5524;
+    color: white;
+  }
+  
+  .button-buy {
+    background-color: #FF5524;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .button-buy:hover {
+    background-color: #e64e23;
+  }
+  

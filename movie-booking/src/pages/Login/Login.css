@@ -1,0 +1,16 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+@import "tailwindcss";
+
+.btn-container {
+    @apply flex justify-center space-x-6; 
+}
+
+.btn-social {
+    @apply flex items-center justify-center w-15 h-12 p-3 rounded-lg border border-gray-600 bg-gradient-to-r from-[#2B2B2B]/100 to-[#000000];
+}
+
+.btn-social img {
+    @apply w-6 h-6; 
+}
+

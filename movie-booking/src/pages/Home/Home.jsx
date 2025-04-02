@@ -1,47 +1,24 @@
 import React, { useEffect, useState } from "react";
+import { Skeleton } from "antd"; // Import Skeleton từ Ant Design
 import SearchBar from "../../components/SearchBar";
 import MovieSection from "../../components/MovieSection";
 import BottomNav from "../../components/BottomNav";
+import { getMovies } from "../../services/getMovies";
 
 const Home = () => {
   const [movies, setMovies] = useState({ nowPlaying: [], upcoming: [], popular: [] });
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const fetchMovies = async () => {
-      try {
-        let allMovies = [];
-        let page = 1;
-        let totalPages = 1;
+      setLoading(true);
+      const allMovies = await getMovies();
+      const nowPlaying = allMovies.filter(movie => movie.status === "playing");
+      const upcoming = allMovies.filter(movie => movie.status === "upcoming");
+      const popular = allMovies.filter(movie => movie.rating >= 7.0);
 
-        do {
-          const response = await fetch(`http://minhtue-001-site1.ktempurl.com/api/movies?page=${page}&pageSize=10`);
-          const result = await response.json();
-
-          if (!result || !Array.isArray(result.data)) {
-            throw new Error("Dữ liệu từ API không hợp lệ");
-          }
-
-          allMovies = [...allMovies, ...result.data.map(movie => ({
-            id: movie.movieId,
-            title: movie.title,
-            rating: movie.rating || 0,
-            genres: movie.genres.length ? movie.genres : [],
-            image: movie.imageMovie.length ? movie.imageMovie[0] : "https://via.placeholder.com/200x300?text=No+Image",
-            status: movie.status.toLowerCase(),
-          }))];
-
-          totalPages = result.totalPages;
-          page++;
-        } while (page <= totalPages);
-
-        const nowPlaying = allMovies.filter(movie => movie.status === "playing");
-        const upcoming = allMovies.filter(movie => movie.status === "upcoming");
-        const popular = allMovies.filter(movie => movie.rating >= 7.0);
-
-        setMovies({ nowPlaying, upcoming, popular });
-      } catch (error) {
-        console.error("Lỗi khi gọi API:", error);
-      }
+      setMovies({ nowPlaying, upcoming, popular });
+      setLoading(false);
     };
 
     fetchMovies();
@@ -52,9 +29,17 @@ const Home = () => {
       <div className="p-4">
         <SearchBar />
       </div>
-      <MovieSection title="Now Playing" movies={movies.nowPlaying} />
-      {movies.popular.length > 0 && <MovieSection title="Popular" movies={movies.popular} />}
-      <MovieSection title="Upcoming" movies={movies.upcoming} />
+
+      {loading ? (
+        <Skeleton active className="my-4" paragraph={{ rows: 4 }} /> 
+      ) : (
+        <>
+          <MovieSection title="Now Playing" movies={movies.nowPlaying} />
+          {movies.popular.length > 0 && <MovieSection title="Popular" movies={movies.popular} />}
+          <MovieSection title="Upcoming" movies={movies.upcoming} />
+        </>
+      )}
+
       <BottomNav />
     </div>
   );

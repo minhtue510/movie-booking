@@ -1,81 +1,109 @@
-import React, { useState } from "react";
-import availableSeat from "../assets/icon/available.svg"; 
-import selectedSeat from "../assets/icon/selected.svg"; 
-import takenSeat from "../assets/icon/taken.svg"; 
+import React, { useEffect, useState } from 'react';
+import { getSeats, checkSeat } from '../services/getSeats';
+import availableSeat from "../assets/icon/available.svg";
+import selectedSeat from "../assets/icon/selected.svg";
+import takenSeat from "../assets/icon/taken.svg";
+import doubleSeatAvailable from "../assets/icon/doubleSeatAvailable.svg";
+import doubleSeatSelected from "../assets/icon/doubleSeatSelected.svg";
+import doubleSeatTaken from "../assets/icon/doubleSeatTaken.svg";
 
-const seats = [
-  ["A1", "A2", "A3"],
-  ["B1", "B2", "B3", "B4", "B5"],
-  ["C1", "C2", "C3", "C4", "C5", "C6", "C7"],
-  ["D1", "D2", "D3", "D4", "D5", "D6", "D7"],
-  ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"],
-  ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"],
-  ["G1", "G2", "G3", "G4", "G5", "G6", "G7"],
-  ["H1", "H2", "H3", "H4", "H5", "H6", "H7"],
-  ["I1", "I2", "I3", "I4", "I5"],
-  ["J1", "J2", "J3"]
-];
+const SeatSelection = ({ showtime }) => {
+    const [seats, setSeats] = useState([]);
+    const [bookedSeats, setBookedSeats] = useState([]); // Dữ liệu ghế đã đặt
 
-const seatsTaken = new Set([
-  "A1",
-  "B4",
-  "C5", "C6",
-  "D4", "D7",
-  "E3", "E4", "E7", "E8",
-  "F4", "F7",
-  "G5", "G6",
-  "H1", "H4", "H7",
-  "I4",
-  "J1"
-]);
+    useEffect(() => {
+        if (!showtime) return;
 
-const SeatSelection = ({ onSeatSelect }) => {
-  const [selectedSeats, setSelectedSeats] = useState([]);
+        const fetchSeats = async () => {
+            try {
+                // Lấy danh sách ghế từ API
+                const seatData = await getSeats(showtime);
+                
+                // Kiểm tra ghế đã đặt
+                const booked = await checkSeat(showtime); // Lọc các ghế đã đặt theo showtimeId
+                console.log("Ghế đã đặt: ", booked); // Kiểm tra danh sách ghế đã đặt
 
-  const toggleSeat = (seat) => {
-    if (!seat || seatsTaken.has(seat)) return;
-  
-    setSelectedSeats((prev) => {
-      const newSeats = prev.includes(seat) 
-        ? prev.filter((s) => s !== seat) 
-        : [...prev, seat];
-  
-      if (onSeatSelect) {
-        setTimeout(() => onSeatSelect(newSeats), 0);
-      }
-  
-      return newSeats;
-    });
-  };
-  
+                setBookedSeats(booked); // Lưu lại ghế đã đặt
 
-  return (
-    <div>
-      {seats.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex justify-center gap-2">
-          {row.map((seat, seatIndex) => {
-            const isSelected = selectedSeats.includes(seat);
+                // Cập nhật trạng thái các ghế dựa trên thông tin đã đặt
+                const updatedSeats = seatData.map(seat => {
+                    const isBooked = booked.includes(seat.seatId); // Kiểm tra ghế đã đặt
+                    console.log(`Seat ${seat.seatId} isBooked: ${isBooked}`);
+                    return {
+                        ...seat,
+                        isBooked
+                    };
+                });
 
-            return (
-              <button
-                key={seatIndex}
-                className={`w-8 h-8 md:w-10 md:h-10 rounded-md transition-transform ${
-                  isSelected ? "scale-110" : "hover:scale-105"
-                }`}
-                onClick={() => toggleSeat(seat)}
-              >
-                <img
-                  src={seatsTaken.has(seat) ? takenSeat : isSelected ? selectedSeat : availableSeat}
-                  alt="seat"
-                  className="w-full h-full object-contain"
-                />
-              </button>
-            );
-          })}
+                setSeats(updatedSeats); // Cập nhật lại danh sách ghế
+            } catch (error) {
+                console.error("Lỗi khi lấy danh sách ghế:", error);
+            }
+        };
+
+        fetchSeats();
+    }, [showtime]);
+
+    const singleSeats = seats.filter(seat => seat.type === 'Ghế thường');
+    const doubleSeats = seats.filter(seat => seat.type === 'Ghế đôi');
+    const vipSeats = seats.filter(seat => seat.type === 'Ghế VIP');
+
+    return (
+        <div className="flex flex-col items-center">
+            <div className="text-center text-[#4D4D4D] mb-4 rounded-lg">Screen this side</div>
+
+            {/* Ghế VIP */}
+            <div className="grid grid-cols-10 gap-2">
+                {vipSeats.map((seat) => (
+                    <div
+                        key={seat.seatId}
+                        className={`flex items-center justify-center rounded-md 
+                            ${seat.isBooked ? 'bg-gray-400' : ''} w-8 h-8`}
+                    >
+                        <img src={seat.isBooked ? doubleSeatTaken : doubleSeatAvailable} alt="Ghế VIP" className="w-6 h-6" />
+                    </div>
+                ))}
+            </div>
+
+            {/* Ghế thường */}
+            <div className="grid grid-cols-10 gap-2">
+                {singleSeats.map((seat) => (
+                    <div
+                        key={seat.seatId}
+                        className={`flex items-center justify-center rounded-md 
+                            ${seat.isBooked} w-8 h-8`}
+                    >
+                        <img
+                            src={seat.isBooked ? takenSeat : availableSeat} // Nếu ghế đã đặt, hiển thị icon selectedSeat
+                            alt="Ghế thường"
+                            className="w-6 h-6"
+                        />
+                    </div>
+                ))}
+            </div>
+
+            {/* Ghế đôi */}
+            <div className="grid grid-cols-6 gap-10 mb-4">
+                {doubleSeats.map((seat) => (
+                    <div
+                        key={seat.seatId}
+                        className={`flex items-center justify-around rounded-md 
+                            ${seat.isBooked ? 'bg-gray-400' : ''} w-25 h-10`}
+                    >
+                        <img src={seat.isBooked ? doubleSeatTaken : doubleSeatAvailable} alt="Ghế đôi" className="w-12 h-8" />
+                    </div>
+                ))}
+            </div>
+            
+
+            {/* Text trạng thái */}
+            <div>
+                <>Available</> {/* Đã có ghế trống */}
+                <>Taken</> {/* Đã đặt ghế */}
+                <>Selected</> {/* Ghế được chọn */}
+            </div>
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 export default SeatSelection;
