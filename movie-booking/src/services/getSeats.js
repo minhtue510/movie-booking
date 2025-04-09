@@ -31,12 +31,8 @@ export const getShowtimes= async (movieId) => {
   export const checkSeat = async (showtimeId) => {
     try {
         const response = await api.get(`/bookings/booked-seat/${showtimeId}`);
-        console.log("Dữ liệu trả về từ API:", response.data);
-
-        // Kiểm tra xem dữ liệu trả về có phải là một mảng không
         if (Array.isArray(response.data)) {
-            console.log("Các ghế đã đặt (seatId):", response.data);
-            return response.data;  // Trả về trực tiếp mảng seatId nếu đúng định dạng
+            return response.data;  
         } else {
             console.error("Dữ liệu không phải là mảng:", response.data);
             return [];

@@ -1,18 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UserOutlined, InfoCircleOutlined, SettingOutlined } from "@ant-design/icons";
 import logoutIcon from "../../assets/icon/logout.png";
 import avatar from "../../assets/images/avatar.png";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "../../components/BottomNav";
-
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUserFromToken } from "../../redux/store/authSlice";
+import { jwtDecode } from "jwt-decode";
 const Profile = () => {
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
+    const [decodedToken, setDecodedToken] = useState(null);
+    
+    useEffect(() => {
+        dispatch(fetchUserFromToken()); 
+        const token = localStorage.getItem("accessToken");
+
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                console.log("Dữ liệu từ token:", decoded);
+                setDecodedToken(decoded);
+            } catch (error) {
+                console.error("Lỗi giải mã token:", error);
+            }
+        }
+    }, [dispatch]);
+
     const showModal = () => setIsModalOpen(true);
     const handleOk = () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("tokenExpiry");
         setIsModalOpen(false);
         navigate("/login");
     };
+    
     const handleCancel = () => setIsModalOpen(false);
 
     return (
@@ -21,7 +45,8 @@ const Profile = () => {
             <div className="w-24 h-24 rounded-full overflow-hidden">
                 <img src={avatar} alt="User Profile" className="w-full h-full object-cover" />
             </div>
-            <p className="mt-8 text-lg">User Name</p>
+
+            <p className="mt-8 text-lg">{user?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || "User Name"}</p>
 
             <div className="mt-8 w-full max-w-sm space-y-2">
                 <MenuItem icon={<UserOutlined />} title="Account" subtitle={"Edit Profile\nChange Password"} />

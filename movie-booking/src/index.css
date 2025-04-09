@@ -1,8 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap');
 
-@import "tailwindcss/preflight";
+/* @import "tailwindcss/preflight";
 @import "tailwindcss/utilities";
-@import "tailwindcss";
+@import "tailwindcss"; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
     font-family: 'Mulish';
@@ -13,3 +17,6 @@ body {
 }
   
   
+html, body, #root {
+    overflow-x: hidden;
+  }

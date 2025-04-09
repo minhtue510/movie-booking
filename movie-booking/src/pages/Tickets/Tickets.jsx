@@ -1,109 +1,127 @@
 import React, { useEffect, useState } from "react";
-import { ClockCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
-import "../Tickets/Tickets.css";
+import { ClockCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { getOrderDetail } from "../../services/getOrderDetail";
+import dayjs from "dayjs";
+
 const Tickets = () => {
   const [tickets, setTickets] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { orderId } = useParams();
+
   useEffect(() => {
-    const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
-    setTickets(storedTickets);
-    console.log("Tickets Data:", storedTickets);
-  }, []);
+    const queryParams = new URLSearchParams(location.search);
+    if (orderId) {
+      getOrderDetail(orderId)
+        .then((res) => {
+          if (res?.data?.length > 0) {
+            const formattedTickets = res.data.map((ticket) => ({
+              background: ticket.imageMovie,
+              title: ticket.title || "My Movie",
+              selectedDate: ticket.showTimeDate,
+              selectedTime: ticket.showTimeStart,
+              hall: ticket.hall,
+              row: ticket.seatRow,
+              seat: ticket.seatNumber,
+              orderId: ticket.orderId,
+            }));
 
-  const getRowAndSeat = (seats) => {
-    if (!seats || seats.length === 0) return { row: "", seatNumbers: "" };
-    const sortedSeats = seats.sort((a, b) => {
-      const rowA = a[0];
-      const rowB = b[0];
-      const seatNumberA = parseInt(a.slice(1));
-      const seatNumberB = parseInt(b.slice(1));
-
-      if (rowA === rowB) {
-        return seatNumberA - seatNumberB;
-      }
-      return rowA.localeCompare(rowB);
-    });
-
-    const seatRows = sortedSeats.map((seat) => seat[0]);
-    const seatNumbers = sortedSeats.map((seat) => seat.slice(1));
-
-    return {
-      row: [...new Set(seatRows)].join(", "),
-      seatNumbers: seatNumbers.join(", "),
-    };
-  };
-
-  const generateQRCodeData = (ticket) => {
-    return JSON.stringify({
-      movie: ticket.movie.title,
-      date: ticket.selectedDate,
-      time: ticket.selectedTime,
-      hall: ticket.hall,
-      row: getRowAndSeat(ticket.selectedSeats).row,
-      seats: getRowAndSeat(ticket.selectedSeats).seatNumbers,
-    });
-
-  };
+            setTickets(formattedTickets);
+            localStorage.setItem("tickets", JSON.stringify(formattedTickets));
+          } else {
+            console.warn("Không có dữ liệu ticket từ API.");
+          }
+        })
+        .catch((err) => {
+          console.error("Lỗi khi gọi API getOrderDetail:", err);
+        });
+    } else {
+      const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
+      setTickets(storedTickets);
+    }
+  }, [location.search]);
 
   return (
     <div className="bg-black h-screen flex flex-col items-center p-4 text-white relative overflow-hidden">
-      <h1 className="text-xl font-bold pb-4">My Ticket</h1>
+      <h1 className="text-xl font-bold pb-4">My Tickets</h1>
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("/home")}
         className="absolute top-4 left-12 w-[34px] h-[34px] bg-[#FF5524] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#FF5524] transition"
       >
         <CloseCircleOutlined className="text-xl" />
       </button>
-      {tickets.length === 0 ? (
-        <p className="text-gray-400">No ticket booked yet.</p>
-      ) : (
-        <div className="flex-1 flex flex-col items-center w-full">
-          <div className="bg-[#FF5524] rounded-3xl w-[85%] max-w-[350px] h-[90%] flex flex-col items-center relative shadow-2xl pb-4">
-            <div className="relative w-full h-[80%] rounded-t-3xl overflow-hidden shadow-lg">
-              <img
-                src={tickets[0].movie.background}
-                alt={tickets[0].movie.title}
-                className="w-full h-full object-fill"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#FF5524]"></div>
-            </div>
-            <div className="w-full h-[10vh]  bg-[#FF5524] text-center py-4 border-t-2 border-dashed border-black relative">
-              <div className="absolute -left-8 top-[-35px] w-16 h-16 bg-black rounded-full"></div>
-              <div className="absolute -right-8 top-[-35px] w-16 h-16 bg-black rounded-full"></div>
-              <div className="flex items-center gap-10 w-full justify-center mt-3">
-                <div className="flex flex-col items-center text-white gap-2">
-                  <p className="font-bold text-3xl leading-none">{tickets[0].selectedDate.split(" ")[0]}</p>
-                  <p className="text-sm">{tickets[0].selectedDate.split(" ")[1]}</p>
-                </div>
-                <div className="flex flex-col items-center text-white gap-2">
-                  <ClockCircleOutlined className="text-3xl" />
-                  <p className="text-sm">{tickets[0].selectedTime}</p>
-                </div>
-              </div>
 
-            </div>
-            <div className="flex justify-around w-full px-6 pb-4 text-xs mt-1">
-              <div className="flex flex-col items-center">
-                <p className="text-white font-semibold text-xl">Hall</p>
-                <p className="text-center text-sm">{tickets[0].hall}</p>
+      <div className="flex-1 flex flex-col items-center w-full overflow-y-auto h-full">
+        {tickets.length === 0 ? (
+          <p className="text-gray-400">No ticket booked yet.</p>
+        ) : (
+          tickets.map((ticket, index) => {
+            const formattedDate = dayjs(ticket.selectedDate).format("ddd, D , MMMM , YYYY");
+            const formattedTime = dayjs(ticket.selectedTime, "HH:mm").format("HH:mm");
+
+            return (
+              <div
+                key={index}
+                className="bg-[#FF5524] rounded-3xl w-[85%] max-w-[350px] h-[90%] flex flex-col items-center relative shadow-2xl pb-4 mt-4"
+              >
+                <div className="relative w-full h-[80%] rounded-t-3xl overflow-hidden shadow-lg">
+                  <img
+                    src={ticket.background}
+                    alt={ticket.title}
+                    className="w-full h-full object-fill"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#FF5524]"></div>
+                </div>
+                <div className="w-full h-[10vh] bg-[#FF5524] text-center py-4 border-t-2 border-dashed border-black relative">
+                  <div className="absolute -left-8 top-[-35px] w-16 h-16 bg-black rounded-full"></div>
+                  <div className="absolute -right-8 top-[-35px] w-16 h-16 bg-black rounded-full"></div>
+                  <div className="flex items-center gap-10 w-full justify-center mt-3">
+                    <div className="flex flex-col items-center text-white gap-2">
+                      <p className="font-bold text-3xl leading-none">
+                        {formattedDate.split(",")[1]}
+                      </p>
+                      <p className="text-sm">{formattedDate.split(",")[0]}</p>
+                    </div>
+                    <div className="flex flex-col items-center text-white gap-2">
+                      <ClockCircleOutlined className="text-3xl" />
+                      <p className="text-sm">{formattedTime}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-around w-full px-6 pb-4 text-xs mt-1">
+                  <div className="flex flex-col items-center">
+                    <p className="text-white font-semibold text-xl">Hall</p>
+                    <p className="text-center text-sm">{ticket.hall}</p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <p className="text-white font-semibold text-xl">Row</p>
+                    <p className="text-center text-sm">{ticket.row}</p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <p className="text-white font-semibold text-xl">Seat</p>
+                    <p className="text-center text-sm">{ticket.seat}</p>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center">
+                  <QRCodeCanvas
+                    value={JSON.stringify({
+                      orderId: ticket.orderId,
+                      seat: ticket.seat,
+                      row: ticket.row,
+                      time: ticket.selectedTime,
+                      date: ticket.selectedDate,
+                    })}
+                    className="bg-white rounded-xl p-2"
+                    size={200}
+                  />
+                </div>
               </div>
-              <div className="flex flex-col items-center">
-                <p className="text-white font-semibold text-xl">Row</p>
-                <p className="text-center text-sm">{getRowAndSeat(tickets[0].selectedSeats).row}</p>
-              </div>
-              <div className="flex flex-col items-center">
-                <p className="text-white font-semibold text-xl">Seats</p>
-                <p className="text-center text-sm">{getRowAndSeat(tickets[0].selectedSeats).seatNumbers}</p>
-              </div>
-            </div>
-            <div className="w-50 h-50 mt-2 shadow-lg rounded-lg flex items-center justify-center bg-white mb-4">
-              <QRCodeCanvas value={generateQRCodeData(tickets[0])} size={220} />
-            </div>
-          </div>
-        </div>
-      )}
+            );
+          })
+        )}
+      </div>
     </div>
   );
 };

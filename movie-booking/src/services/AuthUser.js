@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "./config";
+import {jwtDecode} from "jwt-decode";
 
 const api = axios.create({
     baseURL: BASE_URL,
@@ -8,20 +9,22 @@ const api = axios.create({
 
 export const AuthUser = {
     login: async (username, password) => {
-        if (!username) {
-            throw { message: "Tài khoản không được để trống" };
-        }
-        if (!password) {
-            throw { message: "Mật khẩu không được để trống" };
-        }
+        if (!username) throw { message: "Tài khoản không được để trống" };
+        if (!password) throw { message: "Mật khẩu không được để trống" };
+    
         try {
             const response = await api.post("/account/login", { username, password });
-            if (response.data.accessToken) {
-                localStorage.setItem("accessToken", response.data.accessToken);
-                console.log("accessToken");
+            console.log("API response:", response.data);  
+    
+            if (response.data && response.data.jwtToken) {
+                localStorage.setItem("accessToken", response.data.jwtToken); 
+                console.log("Token đã được lưu vào localStorage:", response.data.jwtToken);
+                return response.data;
+            } else {
+                throw new Error("Không nhận được jwtToken từ server");
             }
-            return response.data;
         } catch (error) {
+            console.error("Lỗi đăng nhập:", error.response?.data || "Đăng nhập thất bại");
             throw error.response?.data || { message: "Đăng nhập thất bại" };
         }
     },
@@ -39,7 +42,6 @@ export const AuthUser = {
         } catch (error) {
             const errorData = error.response?.data || { message: "Đăng ký thất bại" };
             console.error("Lỗi đăng ký:", errorData);
-    
             throw {
                 email: errorData.email || "Email already taken",
                 username: errorData.username || "Username already taken",

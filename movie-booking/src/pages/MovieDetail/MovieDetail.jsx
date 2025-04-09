@@ -7,8 +7,8 @@ import "swiper/css/free-mode";
 import { getMovieDetail, getMovieMedia } from "../../services/getMovies";
 import MovieCast from "../../components/MovieCast";
 import { Skeleton } from "antd";
-
-
+import { useDispatch } from "react-redux";
+import { setSelectedMovie } from "../../redux/store/movieSlice";
 const MovieDetail = () => {
     const { movieId } = useParams();
     const [movie, setMovie] = useState(null);
@@ -18,6 +18,7 @@ const MovieDetail = () => {
     const openTrailer = () => setIsTrailerOpen(true);
     const closeTrailer = () => setIsTrailerOpen(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchMovieDetails = async () => {
@@ -57,7 +58,7 @@ const MovieDetail = () => {
         return (
             <div className="bg-black min-h-screen text-white p-6">
                 <Skeleton active title={{ width: "60%" }} paragraph={{ rows: 3 }} />
-                {/* <Skeleton.Image className="w-[256px] h-[353px] mx-auto my-6" /> */}
+                
                 <Skeleton.Button active className="w-full h-10" />
             </div>
         );
@@ -72,7 +73,11 @@ const MovieDetail = () => {
                     <img src={movie.background} className="w-full h-[350px] object-fill" />
                 )}
             </div>
-            <button onClick={() => navigate(-1)} className="absolute top-6 left-6 w-10 h-10 bg-[#FF5524] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#FF5524] transition">
+            <button
+            //  onClick={() => navigate(-1)} 
+        onClick={() => navigate("/home")}
+
+            className="absolute top-6 left-6 w-10 h-10 bg-[#FF5524] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#FF5524] transition">
                 <CloseCircleOutlined className="text-2xl" />
             </button>
 

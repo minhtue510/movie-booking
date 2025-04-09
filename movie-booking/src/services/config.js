@@ -9,4 +9,19 @@ const api = axios.create({
   },
 });
 
+export const getAuthHeaders = () => {
+  const token = localStorage.getItem("accessToken");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+api.interceptors.request.use((config) => {
+  const authHeaders = getAuthHeaders();
+  if (authHeaders.Authorization) {
+    config.headers.Authorization = authHeaders.Authorization;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
 export default api;

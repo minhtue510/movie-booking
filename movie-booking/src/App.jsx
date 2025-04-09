@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Search from "./pages/Search/Search";
 import Tickets from "./pages/Tickets/Tickets";
@@ -7,29 +7,87 @@ import Profile from "./pages/Profile/Profile";
 import BottomNav from "./components/BottomNav";
 import MovieDetail from "./pages/MovieDetail/MovieDetail";
 import Booking from "./pages/Booking/Booking";
-import TicketsHistory from "./pages/TicketsHistory/TicketsHistory";
+import OrderHistory from "./pages/OrderHistory/OrderHistory";
 import SignUp from "./pages/SignUp/SignUp";
 import Login from "./pages/Login/Login";
 import TicketDetail from "./pages/TicketDetail/TicketDetail";
-
+import PaymentCallback from "./components/PaymentCallback";
+import Account from "./pages/Account/Account";
+import About from "./pages/About/About";
+import Setting from "./pages/Setting/Setting";
+import { useDispatch } from "react-redux";
+import { fetchUserFromToken, logoutUser } from "./redux/store/authSlice";
+import { jwtDecode } from "jwt-decode";
+import PrivateRoute from "./components/PrivateRoute";
 const AppContent = () => {
   const location = useLocation();
-  const hideBottomNav = ["/movie/", "/booking/", "/tickets", "/signup", "/login", "/"].some(path => location.pathname.includes(path));
-  return (
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isMobileDevice = () => {
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  };
 
+  const hideBottomNav = ["/movie/", "/booking/", "/tickets", "/signup", "/login", "/"].some(path =>
+    location.pathname.includes(path)
+  );
+
+useEffect(() => {
+  const token = localStorage.getItem("accessToken");
+
+  if (isMobileDevice()) {
+    if (!token) {
+      navigate("/login");
+    } else {
+      try {
+        const decoded = jwtDecode(token);
+        const currentTime = Math.floor(Date.now() / 1000);
+
+        if (decoded.exp < currentTime) {
+          localStorage.removeItem("accessToken");
+          dispatch(logoutUser());
+          navigate("/login");
+          window.location.reload();
+        } else {
+          dispatch(fetchUserFromToken());
+        }
+      } catch (error) {
+        console.error("Lỗi giải mã token:", error);
+        localStorage.removeItem("accessToken");
+        dispatch(logoutUser());
+        navigate("/login");
+        window.location.reload();
+      }
+    }
+  } else {
+    if (token) {
+      try {
+        dispatch(fetchUserFromToken());
+      } catch (error) {
+        console.error("Lỗi khi fetch user từ token:", error);
+      }
+    }
+  }
+}, [dispatch, navigate]);
+
+
+  return (
     <div>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/movies/:movieId" element={<MovieDetail />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/tickets" element={<Tickets />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/tickets/ticket/:orderId" element={<PrivateRoute><Tickets /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/booking/:movieId" element={<Booking />} />
-        <Route path="/history" element={<TicketsHistory />} />
-        <Route path="/ticket/:id" element={<TicketDetail />} />
+        <Route path="/history" element={<PrivateRoute><OrderHistory /></PrivateRoute>} />
+        <Route path="/history/:id" element={<PrivateRoute><TicketDetail /></PrivateRoute>} />
+        <Route path="/payment-callback" element={<PrivateRoute><PaymentCallback /></PrivateRoute>} />
+        <Route path="/account" element={<PrivateRoute><Account /></PrivateRoute>} />
+        <Route path="/about" element={<About />} />
+        <Route path="/setting" element={<Setting />} />
       </Routes>
       {!hideBottomNav && <BottomNav />}
     </div>

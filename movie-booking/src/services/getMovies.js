@@ -2,30 +2,36 @@ import api from "./config";
 
 export const getMovies = async () => {
     try {
-      let allMovies = [];
-      let page = 1;
-      let totalPages = 1;
+      const firstPageResponse = await api.get(`/movies?page=1&pageSize=10`);
+      const firstPageResult = firstPageResponse.data;
   
-      do {
-        const response = await api.get(`/movies?page=${page}&pageSize=10`);
-        const result = response.data;
+      if (!firstPageResult || !Array.isArray(firstPageResult.data)) {
+        throw new Error("Dữ liệu từ API không hợp lệ");
+      }
   
-        if (!result || !Array.isArray(result.data)) {
-          throw new Error("Dữ liệu từ API không hợp lệ");
-        }
+      const totalPages = firstPageResult.totalPages;
+      const fetches = [];
   
-        allMovies = [...allMovies, ...result.data.map(movie => ({
+      for (let i = 2; i <= totalPages; i++) {
+        fetches.push(api.get(`/movies?page=${i}&pageSize=10`));
+      }
+  
+      const restPageResponses = await Promise.all(fetches);
+  
+      const allPages = [firstPageResult, ...restPageResponses.map((res) => res.data)];
+  
+      const allMovies = allPages.flatMap((result) =>
+        result.data.map((movie) => ({
           id: movie.movieId,
           title: movie.title,
           rating: movie.rating || 0,
           genres: movie.genres.length ? movie.genres : [],
-          image: movie.imageMovie.length ? movie.imageMovie[0] : "https://via.placeholder.com/200x300?text=No+Image",
+          image: movie.imageMovie.length
+            ? movie.imageMovie[0]
+            : "https://via.placeholder.com/200x300?text=No+Image",
           status: movie.status.toLowerCase(),
-        }))];
-  
-        totalPages = result.totalPages;
-        page++;
-      } while (page <= totalPages);
+        }))
+      );
   
       return allMovies;
     } catch (error) {
@@ -33,7 +39,7 @@ export const getMovies = async () => {
       return [];
     }
   };
-
+  
 
 export const getMovieDetail = async (movieId) => {
     try {

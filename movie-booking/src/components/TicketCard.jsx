@@ -1,69 +1,70 @@
-// import React, { useState } from "react";
-// import { ClockCircleOutlined } from "@ant-design/icons";
-// import { QRCodeCanvas } from "qrcode.react";
 
-// const TicketCard = ({ ticket, onUpdateTicket }) => {
-//   const isUsed = ticket?.used || false; 
+import React from "react";
+import { ClockCircleOutlined } from "@ant-design/icons";
 
-//   const handleScanQRCode = () => {
-//     if (!isUsed) {
-//       onUpdateTicket(ticket.id); 
-//     }
-//   };
+const TicketCard = ({ ticket }) => {
+  const formattedDate = new Date(ticket.dateTime).toLocaleDateString("en-US", {
+    weekday: "short",
+    day: "numeric",
+  });
+  const formattedTime = new Date(ticket.dateTime).toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-//   return (
-//     <div className="bg-orange-500 rounded-3xl w-[85%] max-w-[350px] flex flex-col items-center relative shadow-2xl pb-4">
-//       <div className="relative w-full h-[80%] rounded-t-3xl overflow-hidden shadow-lg">
-//         <img
-//           src={ticket.movie.background}
-//           alt={ticket.movie.title}
-//           className="w-full h-full object-cover"
-//         />
-//         <div className={`absolute top-2 right-2 px-3 py-1 rounded-full text-xs font-semibold ${isUsed ? "bg-gray-500 text-white" : "bg-green-500 text-black"}`}>
-//           {isUsed ? "Đã sử dụng" : "Chưa sử dụng"}
-//         </div>
-//         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-orange-500"></div>
-//       </div>
+  return (
+    <div className="bg-[#FF5524] rounded-3xl w-[85%] max-w-[350px] flex flex-col items-center relative shadow-2xl pb-6 mt-6">
 
-//       <div className="w-full h-[10vh] bg-orange-500 text-center py-4 border-t-6 border-dashed border-black relative">
-//         <div className="absolute -left-8 top-[-30px] w-16 h-16 bg-black rounded-full"></div>
-//         <div className="absolute -right-8 top-[-30px] w-16 h-16 bg-black rounded-full"></div>
-//         <div className="flex items-center gap-10 w-full justify-center mt-3">
-//           <div className="flex flex-col items-center text-white gap-2">
-//             <p className="font-bold text-3xl leading-none">{ticket.selectedDate.split(" ")[0]}</p>
-//             <p className="text-sm">{ticket.selectedDate.split(" ")[1]}</p>
-//           </div>
-//           <div className="flex flex-col items-center text-white gap-2">
-//             <ClockCircleOutlined className="text-3xl" />
-//             <p className="text-sm">{ticket.selectedTime}</p>
-//           </div>
-//         </div>
-//       </div>
+      <div className="relative w-full h-[260px] rounded-t-3xl overflow-hidden shadow-lg">
+        <img
+          src={ticket.imageMovie}
+          alt={ticket.title}
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-//       <div className="flex justify-around w-full px-6 pb-4 text-xs mt-1">
-//         <div className="flex flex-col items-center">
-//           <p className="text-white font-semibold text-xl">Hall</p>
-//           <p className="text-center text-sm">{ticket.hall}</p>
-//         </div>
-//         <div className="flex flex-col items-center">
-//           <p className="text-white font-semibold text-xl">Row</p>
-//           <p className="text-center text-sm">{ticket.selectedSeats.join(", ")}</p>
-//         </div>
-//       </div>
+  
+      <div className="absolute -left-4 top-[250px] w-8 h-8 bg-black rounded-full z-10"></div>
+      <div className="absolute -right-4 top-[250px] w-8 h-8 bg-black rounded-full z-10"></div>
 
-//       <div className="w-50 h-50 mt-2 shadow-lg rounded-lg flex items-center justify-center bg-white mb-4">
-//         <QRCodeCanvas value={JSON.stringify(ticket)} size={220} />
-//       </div>
+   
+      <div className="text-white w-full text-center mt-6">
+        <div className="flex justify-center items-center gap-12 mb-4">
+          <div className="flex flex-col items-center">
+            <p className="text-2xl font-bold">{formattedDate.split(" ")[1]}</p>
+            <p className="text-sm">{formattedDate.split(" ")[0]}</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <ClockCircleOutlined className="text-2xl" />
+            <p className="text-sm">{formattedTime}</p>
+          </div>
+        </div>
 
-//       {!isUsed && (
-//         <button 
-//           onClick={handleScanQRCode} 
-//           className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-3 shadow-md hover:bg-blue-600 transition"
-//         >
-//         </button>
-//       )}
-//     </div>
-//   );
-// };
+        <div className="flex justify-around text-xs px-6 mb-6">
+          <div>
+            <p className="font-semibold text-lg">Hall</p>
+            <p>{ticket.hall}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-lg">Row</p>
+            <p>{ticket.seatRow}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-lg">Seats</p>
+            <p>{Array.isArray(ticket.seatNumbers) ? ticket.seatNumbers.join(", ") : ticket.seatRow}</p>
+          </div>
+        </div>
+      </div>
 
-// export default TicketCard;
+      <div className="flex flex-col items-center mt-2">
+        <div
+          className="bg-white p-4 rounded-xl shadow-lg w-[150px] h-[150px] flex items-center justify-center"
+          dangerouslySetInnerHTML={{ __html: ticket.qrCode }}
+        />
+        <p className="text-white text-sm mt-2">Scan to verify</p>
+      </div>
+    </div>
+  );
+};
+
+export default TicketCard;

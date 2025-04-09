@@ -17,15 +17,26 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleLogin = async () => {
-        setError("");
+        setError(""); 
         try {
             const userData = await AuthUser.login(username, password);
-            console.log("Đăng nhập thành công:", userData);
-            navigate("/home");
+            console.log("Đăng nhập thành công:", userData);  
+            
+            if (userData && userData.jwtToken) {
+                const now = new Date().getTime();
+                const expiryTime = now + 45 * 60 * 1000; 
+                localStorage.setItem("accessToken", userData.jwtToken);
+                localStorage.setItem("tokenExpiry", expiryTime);
+                navigate("/home");
+            } else {
+                setError("Không nhận được dữ liệu người dùng từ server");
+            }
         } catch (err) {
+            console.error("Lỗi đăng nhập:", err); 
             setError(err.message || "Sai thông tin đăng nhập");
         }
     };
+    
 
     return (
         <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative">
