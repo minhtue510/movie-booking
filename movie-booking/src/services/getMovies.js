@@ -1,50 +1,51 @@
 import api from "./config";
 
-export const getMovies = async () => {
+export const getMovies = async (searchTerm = "") => {
     try {
-      const firstPageResponse = await api.get(`/movies?page=1&pageSize=10`);
-      const firstPageResult = firstPageResponse.data;
-  
-      if (!firstPageResult || !Array.isArray(firstPageResult.data)) {
-        throw new Error("Dữ liệu từ API không hợp lệ");
-      }
-  
-      const totalPages = firstPageResult.totalPages;
-      const fetches = [];
-  
-      for (let i = 2; i <= totalPages; i++) {
-        fetches.push(api.get(`/movies?page=${i}&pageSize=10`));
-      }
-  
-      const restPageResponses = await Promise.all(fetches);
-  
-      const allPages = [firstPageResult, ...restPageResponses.map((res) => res.data)];
-  
-      const allMovies = allPages.flatMap((result) =>
-        result.data.map((movie) => ({
-          id: movie.movieId,
-          title: movie.title,
-          rating: movie.rating || 0,
-          genres: movie.genres.length ? movie.genres : [],
-          image: movie.imageMovie.length
-            ? movie.imageMovie[0]
-            : "https://via.placeholder.com/200x300?text=No+Image",
-          status: movie.status.toLowerCase(),
-        }))
-      );
-  
-      return allMovies;
+        let allMovies = [];
+        let page = 1;
+        let totalPages = 1;
+        const searchQuery = searchTerm ? `&Search=${searchTerm}` : "";
+
+        do {
+            const response = await api.get(`/movies?page=${page}&pageSize=100${searchQuery}`);
+            const result = response.data;
+
+            const moviesArray = Array.isArray(result.data) ? result.data : [];
+
+            allMovies = [
+                ...allMovies,
+                ...moviesArray.map((movie) => ({
+                    id: movie.movieId,
+                    title: movie.title,
+                    rating: movie.rating || 0,
+                    genres: Array.isArray(movie.genres) ? movie.genres : [],
+                    image:
+                        Array.isArray(movie.imageMovie) && movie.imageMovie.length
+                            ? movie.imageMovie[0]
+                            : "https://via.placeholder.com/200x300?text=No+Image",
+                    status: movie.status?.toLowerCase() || "unknown",
+                })),
+            ];
+
+
+            totalPages = result.totalPages;
+            page++;
+        } while (page <= totalPages);
+
+        return allMovies;
     } catch (error) {
-      console.error("Lỗi khi gọi API movies:", error);
-      return [];
+        console.error("Lỗi khi gọi API movies:", error);
+        return [];
     }
-  };
-  
+};
+
+
 
 export const getMovieDetail = async (movieId) => {
     try {
         const response = await api.get(`/movies/${movieId}`);
-        const movie = response.data;  
+        const movie = response.data;
 
         if (!movie) {
             throw new Error("Không tìm thấy dữ liệu phim");
@@ -92,7 +93,7 @@ export const getMovieMedia = async (movieId) => {
             .map(media => {
                 const videoURL = media.mediaURL;
                 let videoId = "";
-                
+
                 if (videoURL.includes("youtube.com/watch?v=")) {
                     videoId = videoURL.split("v=")[1]?.split("&")[0];
                 } else if (videoURL.includes("youtu.be/")) {
@@ -100,10 +101,10 @@ export const getMovieMedia = async (movieId) => {
                 }
 
                 return videoId
-                ? `https://www.youtube-nocookie.com/embed/${videoId}?modestbranding=1&rel=0&enablejsapi=1&autoplay=1&controls=1`
-                : null;
-            
-            
+                    ? `https://www.youtube-nocookie.com/embed/${videoId}?modestbranding=1&rel=0&enablejsapi=1&autoplay=1&controls=1`
+                    : null;
+
+
             })
             .filter(Boolean);
 
@@ -117,11 +118,11 @@ export const getMovieMedia = async (movieId) => {
 export const getMovieCast = async (movieId) => {
     try {
         const response = await api.get(`/actors/movie/${movieId}`);
-        const castData = response.data?.data?.[0] || []; 
+        const castData = response.data?.data?.[0] || [];
         return castData.map(actor => ({
             id: actor.id,
             name: actor.name,
-            image: actor.imageURL, 
+            image: actor.imageURL,
             role: actor.role
         }));
     } catch (error) {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import homeIcon from "../assets/icon/home.jpg";
-import searchIcon from "../assets/icon/search.jpg";
-import ticketIcon from "../assets/icon/ticket.jpg";
-import userIcon from "../assets/icon/user.jpg";
+import homeIcon from "../../assets/icon/home.jpg";
+import searchIcon from "../../assets/icon/search.jpg";
+import ticketIcon from "../../assets/icon/ticket.jpg";
+import userIcon from "../../assets/icon/user.jpg";
 
 const BottomNav = () => {
   const navigate = useNavigate();

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { getSeats, checkSeat } from '../services/getSeats';
-import availableSeat from "../assets/icon/available.svg";
-import selectedSeat from "../assets/icon/selected.svg";
-import takenSeat from "../assets/icon/taken.svg";
-import doubleSeatAvailable from "../assets/icon/doubleSeatAvailable.svg";
-import doubleSeatSelected from "../assets/icon/doubleSeatSelected.svg";
-import doubleSeatTaken from "../assets/icon/doubleSeatTaken.svg";
-
+import { getSeats, checkSeat } from '../../services/getSeats';
+import availableSeat from "../../assets/icon/available.svg";
+import selectedSeat from "../../assets/icon/selected.svg";
+import takenSeat from "../../assets/icon/taken.svg";
+import doubleSeatAvailable from "../../assets/icon/doubleSeatAvailable.svg";
+import doubleSeatSelected from "../../assets/icon/doubleSeatSelected.svg";
+import doubleSeatTaken from "../../assets/icon/doubleSeatTaken.svg";
+import { useTranslation } from "react-i18next";
 const SeatSelection = ({selectedSeats, setSelectedSeats, showtime }) => {
     const [seats, setSeats] = useState([]);
     const [bookedSeats, setBookedSeats] = useState([]);
-
+    const { t } = useTranslation();
     useEffect(() => {
         if (!showtime) return;
         setSelectedSeats([]);
@@ -55,7 +55,7 @@ const SeatSelection = ({selectedSeats, setSelectedSeats, showtime }) => {
     
     return (
         <div className="flex flex-col items-center">
-            <div className="text-center text-[#4D4D4D] mb-4 rounded-lg">Screen this side</div>
+            <div className="text-center text-[#4D4D4D] rounded-lg">{t("screen")}</div>
 
             <div className="grid grid-cols-10 gap-2">
                 {seats.filter(seat => seat.type === 'Ghế VIP').map((seat) => (
@@ -102,7 +102,7 @@ const SeatSelection = ({selectedSeats, setSelectedSeats, showtime }) => {
                         onClick={() => handleSeatClick(seat)}
                         className={`flex items-center justify-around rounded-md cursor-pointer
                             ${seat.isBooked ? 'pointer-events-none opacity-50' : ''}
-                            ${selectedSeats.some(s => s.seatId === seat.seatId) ? '' : ''} w-20 h-10`}
+                            ${selectedSeats.some(s => s.seatId === seat.seatId) ? '' : ''} w-15 h-10`}
                     >
                         <img
                             src={seat.isBooked ? doubleSeatTaken :
@@ -117,15 +117,15 @@ const SeatSelection = ({selectedSeats, setSelectedSeats, showtime }) => {
             <div className="flex items-center space-x-4 mt-4">
                 <div className="flex items-center space-x-2">
                     <img src={availableSeat} className="w-6 h-6" alt="Available" />
-                    <span>Available</span>
+                    <span>{t("seat.available")}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                     <img src={takenSeat} className="w-6 h-6" alt="Taken" />
-                    <span>Taken</span>
+                    <span>{t("seat.taken")}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                     <img src={selectedSeat} className="w-6 h-6" alt="Selected" />
-                    <span>Selected</span>
+                    <span>{t("seat.selected")}</span>
                 </div>
             </div>
         </div>

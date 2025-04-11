@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import BottomNav from "../../components/BottomNav.jsx";
+import BottomNav from "../../components/BottomNav/BottomNav.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserFromToken } from "../../redux/store/authSlice.js";
 import { jwtDecode } from "jwt-decode";
 import { getHistory } from "../../services/getHistory.js";
+import Header from "../../components/Header/Header";
+import { useTranslation } from "react-i18next";
 
 const OrderHistory = () => {
   const navigate = useNavigate();
@@ -13,6 +15,7 @@ const OrderHistory = () => {
   const [decodedToken, setDecodedToken] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,11 +40,14 @@ const OrderHistory = () => {
   }, [dispatch]);
 
   return (
+    <><Header />
+
     <div className="bg-black min-h-screen text-white pb-16 relative flex flex-col items-center">
-            <h1 className="text-xl pt-10 pb-2">Ticket History</h1>
+           
+            <h1 className="text-xl pt-10 pb-2 ">{t("ticket.history")}</h1>
       <div className="grid grid-cols-2 gap-4 mt-6">
         {loading ? (
-          <p>Đang tải dữ liệu...</p>
+          <p>{t("loading")}</p>
         ) : tickets.length === 0 ? (
           <p>Không có vé nào.</p>
         ) : (
@@ -63,6 +69,7 @@ const OrderHistory = () => {
       </div>
       <BottomNav />
     </div>
+    </>
   );
 };
 

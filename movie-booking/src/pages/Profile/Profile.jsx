@@ -3,10 +3,12 @@ import { UserOutlined, InfoCircleOutlined, SettingOutlined } from "@ant-design/i
 import logoutIcon from "../../assets/icon/logout.png";
 import avatar from "../../assets/images/avatar.png";
 import { useNavigate } from "react-router-dom";
-import BottomNav from "../../components/BottomNav";
+import BottomNav from "../../components/BottomNav/BottomNav";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserFromToken } from "../../redux/store/authSlice";
 import { jwtDecode } from "jwt-decode";
+import Header from "../../components/Header/Header";
+
 const Profile = () => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.user);
@@ -40,8 +42,9 @@ const Profile = () => {
     const handleCancel = () => setIsModalOpen(false);
 
     return (
-        <div className="bg-black min-h-screen text-white pb-16 relative flex flex-col items-center">
-            <h1 className="text-xl pt-10 pb-10">My Profile</h1>
+    <><Header />
+       <div className="bg-black min-h-screen text-white pb-16 relative flex flex-col items-center">
+            <h1 className="text-xl pt-10 pb-10">Trang cá nhân</h1>
             <div className="w-24 h-24 rounded-full overflow-hidden">
                 <img src={avatar} alt="User Profile" className="w-full h-full object-cover" />
             </div>
@@ -49,16 +52,16 @@ const Profile = () => {
             <p className="mt-8 text-lg">{user?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || "User Name"}</p>
 
             <div className="mt-8 w-full max-w-sm space-y-2">
-                <MenuItem icon={<UserOutlined />} title="Account" subtitle={"Edit Profile\nChange Password"} />
-                <MenuItem icon={<SettingOutlined />} title="Settings" subtitle={"Themes\nPermissions"} />
-                <MenuItem icon={<InfoCircleOutlined />} title="About" subtitle={"About Movies\nMore"} />
-                <MenuItemLogout icon={<img src={logoutIcon} alt="Logout" className="w-5 h-5" />} title="Logout" onClick={showModal} />
+                <MenuItem icon={<UserOutlined />} title="Tài khoản" subtitle={"Chỉnh sửa thông tin\nĐổi mật khẩu"} />
+                <MenuItem icon={<SettingOutlined />} title="Cài đặt" subtitle={"Themes\nPermissions"} />
+                <MenuItem icon={<InfoCircleOutlined />} title="Về chúng tôi" subtitle={"About Movies\nMore"} />
+                <MenuItemLogout icon={<img src={logoutIcon} alt="Logout" className="w-5 h-5" />} title="Đăng xuất" onClick={showModal} />
             </div>
             {isModalOpen && (
                 <div className="fixed inset-0 bg-[#5A5959]/40 flex items-center justify-center" onClick={handleCancel}>
                     <div className="bg-black text-white rounded-lg w-[90%] max-w-[360px] text-center pt-6 shadow-lg" onClick={(e) => e.stopPropagation()}>
                         <div className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center text-2xl font-bold mx-auto">?</div>
-                        <p className="mt-4 text-lg font-semibold">Are you sure you want to log out?</p>
+                        <p className="mt-4 text-lg font-semibold">Bạn có muốn thoát ra không?</p>
                         <div className="w-full mt-6 border-t border-gray-500 flex">
                             <button onClick={handleCancel} className="flex-1 py-3 text-[#FF5524] font-semibold border-r border-gray-500">Cancel</button>
                             <button onClick={handleOk} className="flex-1 py-3 text-[#FF5524] font-semibold">OK</button>
@@ -68,6 +71,7 @@ const Profile = () => {
             )}
             <BottomNav />
         </div>
+        </>
     );
 };
 

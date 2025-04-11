@@ -1,28 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  id: null,
-  title: '',
-  background: '',
+  nowPlaying: [],
+  upcoming: [],
+  popular: [],
+  loaded: false,
 };
 
-const movieSlice = createSlice({
-  name: 'movie',
+const movieCacheSlice = createSlice({
+  name: 'movieCache',
   initialState,
   reducers: {
-    setSelectedMovie: (state, action) => {
-      const { id, title, background } = action.payload;
-      state.id = id;
-      state.title = title;
-      state.background = background;
+    setMovies: (state, action) => {
+      const { nowPlaying, upcoming, popular } = action.payload;
+      state.nowPlaying = nowPlaying;
+      state.upcoming = upcoming;
+      state.popular = popular;
+      state.loaded = true;
     },
-    clearSelectedMovie: (state) => {
-      state.id = null;
-      state.title = '';
-      state.background = '';
-    }
   },
 });
 
-export const { setSelectedMovie, clearSelectedMovie } = movieSlice.actions;
-export default movieSlice.reducer;
+
+
+export const { setMovies } = movieCacheSlice.actions;
+export default movieCacheSlice.reducer;

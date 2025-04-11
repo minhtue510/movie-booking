@@ -1,0 +1,52 @@
+{
+    "profile": "Profile",
+    "myTickets": "My Tickets",
+    "settings": "Settings",
+    "about": "About Us",
+    "logout": {
+        "label": "Logout",
+        "confirmTitle": "Logout Confirmation",
+        "confirmMessage": "Are you sure you want to log out?",
+        "ok": "OK",
+        "cancel": "Cancel"
+    },
+    "signUp": "Sign Up",
+    "signIn": "Sign In",
+    "home": {
+        "nowPlaying": "Now playing",
+        "popular": "Popular",
+        "upcoming": "Upcoming"
+    },
+    "searchPlaceholder": "Search your Movies...",
+    "topCast": "Top Cast",
+    "selectSeat": "Select Seat",
+    "seeMore": "See more",
+    "seeLess": "See less",
+    "screen": "Screen this side",
+    "seat": {
+        "available": "Available",
+        "taken": "Taken",
+        "selected": "Selected"
+    },
+    "price": "Total Price",
+    "buyTicket": "Buy Ticket",
+    "noMovie": "Showtimes not found",
+    "ticket": {
+        "hall": "Hall",
+        "row": "Row",
+        "seat": "Seat",
+        "empty": "No ticket booked yet.",
+        "history": "Ticket History"
+    },
+    "loading": "Loading...",
+    "genres": {
+        "Action": "Action",
+        "Comedy": "Comedy",
+        "Drama": "Drama",
+        "Horror": "Horror",
+        "Romance": "Romance",
+        "Thriller": "Thriller",
+        "Animation": "Animation",
+        "Adventure": "Adventure"
+    }
+}

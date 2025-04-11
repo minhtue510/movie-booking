@@ -9,3 +9,4 @@ export const getTicketDetail = async (userId, movieId) => {
     throw error; 
   }
 };
+

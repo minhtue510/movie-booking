@@ -1,24 +1,27 @@
+/* Nút đang chọn */
+.custom-pagination .ant-pagination-item-active {
+  background-color: #FF5524 !important;
+  border-color: #FF5524 !important;
+  border-radius: 6px; /* nhẹ nhàng hơn */
+  transition: all 0.3s ease;
+}
 
+.custom-pagination .ant-pagination-item-active a {
+  color: white !important;
+}
+
+/* Nút chưa chọn (giữ style gốc nhưng thêm viền nhẹ và hover) */
 .custom-pagination .ant-pagination-item {
-    border-radius: 9999px;
-    background-color: #333;
-    border: none;
-    color: white;
-    font-weight: 500;
-    margin: 0 4px;
-  }
-  
-  .custom-pagination .ant-pagination-item:hover {
-    background-color: #444;
-  }
-  
-  .custom-pagination .ant-pagination-item-active {
-    background-color: #FF5524 ;
-    color: white;
-    border: none;
-    }
-  
-  .custom-pagination .ant-pagination-item-active:hover {
-    background-color: #e14d1d ;
-  }
-  
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.custom-pagination .ant-pagination-item:hover {
+  border-color: #FF5524 !important;
+  color: #FF5524;
+}
+
+/* Hover chữ */
+.custom-pagination .ant-pagination-item:hover a {
+  color: #FF5524 !important;
+}

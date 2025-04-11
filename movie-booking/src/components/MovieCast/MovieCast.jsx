@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
-import { getMovieCast } from "../services/getMovies";
+import { getMovieCast } from "../../services/getMovies"; 
 
 const MovieCast = ({ movieId }) => {
     const [cast, setCast] = useState([]);

@@ -1,0 +1,66 @@
+{
+    "profile": "Trang cá nhân",
+    "myTickets": "Vé của tôi",
+    "settings": "Cài đặt",
+    "about": "Về chúng tôi",
+    "logout": {
+        "label": "Đăng xuất",
+        "confirmTitle": "Xác nhận đăng xuất",
+        "confirmMessage": "Bạn có chắc chắn muốn đăng xuất không?",
+        "ok": "Đồng ý",
+        "cancel": "Hủy"
+    },
+    "signUp": "Đăng kí",
+    "signIn": "Đăng nhập",
+    "home": {
+        "nowPlaying": "Phim đang chiếu",
+        "popular": "Phim phổ biến",
+        "upcoming": "Phim sắp chiếu"
+    },
+    "searchPlaceholder": "Tìm kiếm theo phim...",
+    "topCast": "Diễn viên",
+    "selectSeat": "Chọn ghế",
+    "seeMore": "Xem thêm",
+    "seeLess": "Thu gọn",
+    "screen": "Màn hình",
+    "seat": {
+        "available": "Ghế trống",
+        "taken": "Ghế đã đặt",
+        "selected": "Ghế chọn"
+    },
+    "price": "Tổng giá",
+    "buyTicket": "Mua vé",
+    "noMovie": "Không tìm thấy lịch chiếu",
+    "ticket": {
+        "hall": "Phòng",
+        "row": "Hàng",
+        "seat": "Ghế",
+        "empty": "Bạn chưa đặt vé nào.",
+        "history": "Lịch sử vé"
+    },
+    "loading": "Đang tải dữ liệu...",
+    "genres": {
+        "sci-fi": "Khoa học viễn tưởng",
+        "musical": "Ca nhạc",
+        "adventure": "Phiêu lưu",
+        "comedy": "Hài hước",
+        "war": "Chiến tranh",
+        "action": "Hành động",
+        "drama": "Tâm lý",
+        "fantasy": "Giả tưởng",
+        "supernatural": "Kỳ ảo",
+        "family": "Gia đình",
+        "sport": "Thể thao",
+        "crime": "Hình sự",
+        "romance": "Tình cảm",
+        "mythology": "Thần thoại",
+        "thriller": "Giật gân",
+        "documentary": "Phim tài liệu",
+        "history": "Lịch sử",
+        "horror": "Kinh dị",
+        "mystery": "Bí ẩn",
+        "animation": "Hoạt hình",
+        "suspense": "Hồi hộp",
+        "concert": "Hòa nhạc"
+    }
+}

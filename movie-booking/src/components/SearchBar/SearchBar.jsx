@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { getMovies } from "../services/getMovies";
-import unorm from "unorm";
+import { getMovies } from "../../services/getMovies";
+import { useTranslation } from "react-i18next";
 
-const SearchBar = ({ query, onSearchChange,  onKeyDown, showDropdown = true }) => {
-
+const SearchBar = ({ query, onSearchChange, showDropdown = true }) => {
   const [input, setInput] = useState(query || "");
-  useEffect(() => {
-    setInput(query || "");
-  }, [query]);
   const [debouncedInput, setDebouncedInput] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [allMovies, setAllMovies] = useState([]); 
   const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
-
-
+  const { t } = useTranslation();
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -33,38 +27,39 @@ const SearchBar = ({ query, onSearchChange,  onKeyDown, showDropdown = true }) =
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedInput(input);
-    }, 300);
+    }, 300); 
 
     return () => {
       clearTimeout(handler);
     };
   }, [input]);
 
-  useEffect(() => {
-    const fetch = async () => {
-      const movies = await getMovies();
-      setAllMovies(movies);
-    };
-    fetch();
-  }, []);
-
-  useEffect(() => {
-    if (!debouncedInput?.trim()) {
+  const fetchSuggestions = async (searchTerm) => {
+    if (!searchTerm.trim()) {
       setSuggestions([]);
       return;
     }
+  
+    try {
+      const movies = await getMovies(searchTerm);
+  
+      if (movies.length === 0) {
+        setSuggestions([]); 
+      } else {
+        setSuggestions(movies);
+      }
+    } catch (error) {
+      console.error("Error fetching search suggestions:", error);
+      setSuggestions([]);
+    }
+  };
+  
 
-
-
-    const normalizedQuery = unorm.nfd(debouncedInput).replace(/[\u0300-\u036f]/g, "");
-
-    const filtered = allMovies.filter((movie) => {
-      const normalizedTitle = unorm.nfd(movie.title).replace(/[\u0300-\u036f]/g, "");
-      return normalizedTitle.toLowerCase().includes(normalizedQuery.toLowerCase());
-    });
-
-    setSuggestions(filtered.slice(0, 5));
-  }, [debouncedInput, allMovies]);
+  useEffect(() => {
+    if (debouncedInput) {
+      fetchSuggestions(debouncedInput); 
+    }
+  }, [debouncedInput]);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -73,7 +68,6 @@ const SearchBar = ({ query, onSearchChange,  onKeyDown, showDropdown = true }) =
       onSearchChange(value);
     }
   };
-  
 
   const handleSelect = (movieId) => {
     navigate(`/movies/${movieId}`);
@@ -83,16 +77,10 @@ const SearchBar = ({ query, onSearchChange,  onKeyDown, showDropdown = true }) =
 
   const handleSearch = () => {
     if (input.trim()) {
-      navigate(`/search?query=${input}`);
+      navigate(`/Search?query=${input}`);
       setSuggestions([]);
     } else {
-      navigate(`/search?query=`);
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
+      navigate(`/Search?query=`);
     }
   };
 
@@ -100,11 +88,10 @@ const SearchBar = ({ query, onSearchChange,  onKeyDown, showDropdown = true }) =
     <div className="relative w-full">
       <input
         type="text"
-        placeholder="Search your Movies..."
+        placeholder={t('searchPlaceholder')}
         value={input}
         onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        className="h-11 w-full bg-black text-white border border-gray-600 rounded-full px-5 pr-12 text-sm placeholder-gray-400 outline-none transition"
+        className="h-11 w-full bg-black text-white-32 border border-gray-600 rounded-full px-5 pr-12 text-sm placeholder-gray-400 outline-none transition"
       />
       <SearchOutlined
         style={{ color: "#FF5524" }}
@@ -123,7 +110,7 @@ const SearchBar = ({ query, onSearchChange,  onKeyDown, showDropdown = true }) =
               <img
                 src={movie.image}
                 alt={movie.title}
-                className="w-12 h-18 object-cover rounded-md mr-4" 
+                className="w-12 h-18 object-cover rounded-md mr-4"
               />
               <span>{movie.title}</span>
             </div>

@@ -1,22 +1,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap');
 
-/* @import "tailwindcss/preflight";
+@import "tailwindcss/preflight";
 @import "tailwindcss/utilities";
-@import "tailwindcss"; */
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 body {
-    font-family: 'Mulish';
+  font-family: 'Mulish', sans-serif;
 }
 
-.orange {
-    color: #FF5524;
-}
-  
-  
 html, body, #root {
-    overflow-x: hidden;
-  }
+  overflow-x: hidden;
+}
+
+/* ==== Color Utility === */
+.text-white-100 { color: rgba(255, 255, 255, 1); }
+.text-white-75  { color: rgba(255, 255, 255, 0.75); }
+.text-white-32  { color: rgba(255, 255, 255, 0.32); }
+.text-white-15  { color: rgba(255, 255, 255, 0.15); }
+
+.bg-white-100 { background-color: rgba(255, 255, 255, 1); }
+.bg-white-75  { background-color: rgba(255, 255, 255, 0.75); }
+.bg-white-32  { background-color: rgba(255, 255, 255, 0.32); }
+.bg-white-15  { background-color: rgba(255, 255, 255, 0.15); }
+
+.text-orange  { color: #FF5524; }
+.bg-orange    { background-color: #FF5524; }
+
+.text-yellow  { color: #E1CD17; }
+.bg-yellow    { background-color: #E1CD17; }
+
+.text-black   { color: #000000; }
+.bg-black     { background-color: #000000; }
+
+/* ==== Font Utility === */
+/* Font weight: Light = 300, Regular = 400, Medium = 500, SemiBold = 600 */
+
+.fw-light     { font-weight: 300; }
+.fw-regular   { font-weight: 400; }
+.fw-medium    { font-weight: 500; }
+.fw-semibold  { font-weight: 600; } 
+
+/* Font Sizes */
+.text-10 { font-size: 10px; }
+.text-12 { font-size: 12px; }
+.text-14 { font-size: 14px; }
+.text-16 { font-size: 16px; }
+.text-20 { font-size: 20px; }
+.text-24 { font-size: 24px; }
+
+/* Examples: fw-medium text-16 text-white-100 */
