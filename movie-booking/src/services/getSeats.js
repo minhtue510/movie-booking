@@ -33,6 +33,7 @@ export const getShowtimes= async (movieId) => {
         const response = await api.get(`/bookings/booked-seat/${showtimeId}`);
         if (Array.isArray(response.data)) {
             return response.data;  
+            console.log("Ghế đã được đặt: ",response);
         } else {
             console.error("Dữ liệu không phải là mảng:", response.data);
             return [];

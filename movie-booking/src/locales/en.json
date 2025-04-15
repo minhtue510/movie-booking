@@ -12,6 +12,27 @@
     },
     "signUp": "Sign Up",
     "signIn": "Sign In",
+    "login": {
+        "title": "Welcome back!",
+        "subTitle": "Welcome back, we missed you",
+        "userName": "Username",
+        "password": "Password",
+        "logging": "Signing in...",
+        "another": "Or continue with",
+        "guest": "Don't have an account ?"
+    },
+    "register": {
+        "title": "Get Start Free",
+        "subTitle": "Free Forever. No Credit Card Needed",
+        "email": "Email Address",
+        "name": "Your name",
+        "password": "Password",
+        "confirmPassword": "Confim Password",
+        "logging":"Signing in...",
+        "another": "Or continue with",
+        "guest": "Don't have an account ?"
+    },
+    "title":"Welcome back!",
     "home": {
         "nowPlaying": "Now playing",
         "popular": "Popular",
@@ -39,14 +60,14 @@
         "history": "Ticket History"
     },
     "loading": "Loading...",
-    "genres": {
-        "Action": "Action",
-        "Comedy": "Comedy",
-        "Drama": "Drama",
-        "Horror": "Horror",
-        "Romance": "Romance",
-        "Thriller": "Thriller",
-        "Animation": "Animation",
-        "Adventure": "Adventure"
-    }
+    "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Sun",
+        "sat": "Sat",
+        "sun": "Sun"
+      }
+
 }

@@ -83,7 +83,7 @@ const AppHeader = () => {
   };
   return (
     <>
-      <Header className="hidden md:flex items-center justify-between bg-[#1f1f1f] px-8">
+      <Header className="hidden md:flex items-center justify-between bg-[#1f1f1f] px-5 py-10">
         <div
           className="flex flex-cols justify-center items-center text-white font-bold text-xl cursor-pointer"
           onClick={() => navigate('/home')}

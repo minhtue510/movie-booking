@@ -12,7 +12,6 @@ html, body, #root {
   overflow-x: hidden;
 }
 
-/* ==== Color Utility === */
 .text-white-100 { color: rgba(255, 255, 255, 1); }
 .text-white-75  { color: rgba(255, 255, 255, 0.75); }
 .text-white-32  { color: rgba(255, 255, 255, 0.32); }
@@ -24,6 +23,8 @@ html, body, #root {
 .bg-white-15  { background-color: rgba(255, 255, 255, 0.15); }
 
 .text-orange  { color: #FF5524; }
+.white-15  { color: #FF5524; }
+
 .bg-orange    { background-color: #FF5524; }
 
 .text-yellow  { color: #E1CD17; }
@@ -32,15 +33,11 @@ html, body, #root {
 .text-black   { color: #000000; }
 .bg-black     { background-color: #000000; }
 
-/* ==== Font Utility === */
-/* Font weight: Light = 300, Regular = 400, Medium = 500, SemiBold = 600 */
-
-.fw-light     { font-weight: 300; }
-.fw-regular   { font-weight: 400; }
-.fw-medium    { font-weight: 500; }
+.font-light     { font-weight: 300; }
+.font-regular   { font-weight: 400; }
+.font-medium    { font-weight: 500; }
 .fw-semibold  { font-weight: 600; } 
-
-/* Font Sizes */
+.text-8 { font-size: 8px; }
 .text-10 { font-size: 10px; }
 .text-12 { font-size: 12px; }
 .text-14 { font-size: 14px; }
@@ -48,4 +45,7 @@ html, body, #root {
 .text-20 { font-size: 20px; }
 .text-24 { font-size: 24px; }
 
-/* Examples: fw-medium text-16 text-white-100 */
+.text-gray {color: #808080}
+.border-gray {color: #808080}
+.placeholder-gray {color: #262626}
+

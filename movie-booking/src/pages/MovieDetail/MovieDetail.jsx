@@ -8,9 +8,8 @@ import { getMovieDetail, getMovieMedia } from "../../services/getMovies";
 import MovieCast from "../../components/MovieCast/MovieCast";
 import Header from "../../components/Header/Header";
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedMovie } from '../../redux/store/movieDetailSlice';
+import { setSelectedMovie, setTopCast } from '../../redux/store/movieDetailSlice';
 import { useTranslation } from "react-i18next";
-import { vi } from "date-fns/locale";
 import { genreTranslations } from "../../locales/genreTranslations";
 import { descriptionData } from '../../locales/descriptionTranslations';
 const MovieDetail = () => {
@@ -28,6 +27,7 @@ const MovieDetail = () => {
     const dispatch = useDispatch();
     const [showFullDescription, setShowFullDescription] = useState(false);
     const cachedMovie = useSelector((state) => state.movieDetail.selectedMovie);
+
     useEffect(() => {
         if (cachedMovie?.id === movieId) {
             setMovie(cachedMovie);
@@ -37,6 +37,9 @@ const MovieDetail = () => {
         const fetchData = async () => {
             const data = await getMovieDetail(movieId);
             const media = await getMovieMedia(movieId);
+            if (media.videos.length > 0) {
+                setTrailerURL(media.videos[0]);
+            }
             const movieData = {
                 ...data,
                 images: media.images,
@@ -45,10 +48,16 @@ const MovieDetail = () => {
             };
             setMovie(movieData);
             dispatch(setSelectedMovie(movieData));
+
+            if (media.cast && Array.isArray(media.cast)) {
+                dispatch(setTopCast(media.cast));
+            }
         };
 
         fetchData();
     }, [movieId]);
+
+
 
 
     const handleBooking = () => {
@@ -146,14 +155,20 @@ const MovieDetail = () => {
             </div>
 
             <div className="p-6 mt-[90px]">
-                <div className="flex items-center justify-center text-gray-300 gap-2">
-                    <ClockCircleOutlined className="text-white text-lg mr-1" />
-                    <span>{movie.duration}</span>
+                <div className="flex items-center justify-center gap-2">
+                    <ClockCircleOutlined className="mr-1 text-gray" />
+                    <div className="text-12 font-medium">
+                        {`${Math.floor(movie.duration / 60)
+                            .toString()
+                            .padStart(2,)}h ${(movie.duration % 60)
+                                .toString()
+                                .padStart(2, "0")}m`}
+                    </div>
                 </div>
-                <h1 className="text-2xl font-bold text-center mt-2">{movie.title}</h1>
+                <h1 className="text-24 font-regular text-center mt-2">{movie.title}</h1>
                 <div className="flex justify-center gap-2 mt-4">
                     {movie.genres.map((genre, index) => (
-                        <span key={index} className="px-3 py-1 text-xs font-semibold text-white border border-white rounded-[10px]">
+                        <span key={index} className="px-3 py-1 text-10 font-regular text-white border border-white rounded-[10px]">
                             {genreTranslations[genre]?.[currentLang] || genre}
                         </span>
                     ))}
@@ -162,13 +177,13 @@ const MovieDetail = () => {
                 <div className="flex items-center justify-between mt-4">
                     <div className="flex items-center gap-1">
                         <span className="text-yellow-400">⭐</span>
-                        <span className="text-white font-semibold">{movie.rating}</span>
-                        <span className="text-gray-300 ml-2">
+                        <span className="text-white text-12 font-medium">{movie.rating}</span>
+                        <span className="text-white text-12 font-medium ml-2">
                             {i18n.language === "vi"
                                 ? format(new Date(movie.releaseDate), "dd/MM/yyyy")
                                 : format(new Date(movie.releaseDate), "dd MMMM yyyy")}
                         </span>
-                        <span className="text-black font-bold bg-white ml-2 w-10 flex items-center justify-center rounded-lg">
+                        <span className="text-black font-bold bg-white ml-2 w-10 h-5 flex items-center justify-center rounded-lg">
                             {movie.ageRating.split("-")[0]}
                         </span>
                     </div>
@@ -179,30 +194,32 @@ const MovieDetail = () => {
                             <PlayCircleOutlined className="text-xl" />
                             Trailer
                         </button>
+
                     )}
                 </div>
                 {isTrailerOpen && trailerURL && (
-                    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40  transition-all duration-300 px-4">
-                        <div className="relative bg-black rounded-xl overflow-hidden w-full max-w-3xl shadow-xl aspect-video">
+                    <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.65)] backdrop-brightness-50 z-50">
+                        <div className="relative bg-black rounded-lg  max-w-3xl w-full shadow-xl">
+
+                            <div className="absolute top-0 right-0 w-12 h-12 z-10 pointer-events-none"></div>
                             <button
                                 onClick={closeTrailer}
-                                className="absolute top-2 right-2 z-50 bg-white/20  text-white w-9 h-9 flex items-center justify-center rounded-full shadow-md transition"
+                                className="absolute -top-10 right-4 bg-[#FF5524] text-white p-2 rounded-full z-20 hover:scale-105 transition-transform duration-200"
                             >
-                                <CloseOutlined className="text-lg sm:text-xl" />
+                                <CloseOutlined className="text-xl" />
                             </button>
+
 
                             <iframe
                                 src={trailerURL}
-                                className="w-full h-full"
+                                className="w-full h-[300px] sm:h-[400px] md:h-[500px]"
                                 allowFullScreen
                                 playsInline
-                                allow="autoplay"
-                                title="Trailer"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             ></iframe>
                         </div>
                     </div>
                 )}
-
 
                 <div className="mt-4 md:hidden">
                     <p className={`text-gray-300 text-sm transition-all duration-300 ${!showFullDescription ? "line-clamp-3" : ""}`}>

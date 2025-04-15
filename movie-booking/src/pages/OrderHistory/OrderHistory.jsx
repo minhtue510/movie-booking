@@ -6,6 +6,7 @@ import { fetchUserFromToken } from "../../redux/store/authSlice.js";
 import { jwtDecode } from "jwt-decode";
 import { getHistory } from "../../services/getHistory.js";
 import Header from "../../components/Header/Header";
+import { Skeleton, Pagination } from "antd";
 import { useTranslation } from "react-i18next";
 
 const OrderHistory = () => {
@@ -16,6 +17,8 @@ const OrderHistory = () => {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,8 +29,7 @@ const OrderHistory = () => {
           const decoded = jwtDecode(token);
           setDecodedToken(decoded);
           const { data } = await getHistory(decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
-          console.log("Lịch sử đặt vé:", decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]); // Debugging line
-          setTickets(data || []);        
+          setTickets(data || []);
         } catch (error) {
           console.error("Lỗi khi lấy dữ liệu lịch sử:", error);
         } finally {
@@ -39,36 +41,72 @@ const OrderHistory = () => {
     fetchData();
   }, [dispatch]);
 
-  return (
-    <><Header />
+  const handlePageChange = (page) => setCurrentPage(page);
 
-    <div className="bg-black min-h-screen text-white pb-16 relative flex flex-col items-center">
-           
-            <h1 className="text-xl pt-10 pb-2 ">{t("ticket.history")}</h1>
-      <div className="grid grid-cols-2 gap-4 mt-6">
+  const paginatedTickets = tickets.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  return (
+    <>
+      <Header />
+      <div className="bg-black min-h-screen text-white px-4 sm:px-6 md:px-10 ">
+        <h1 className="text-xl pt-10 pb-10 text-center ">{t("ticket.history")}</h1>
+
         {loading ? (
-          <p>{t("loading")}</p>
-        ) : tickets.length === 0 ? (
-          <p>Không có vé nào.</p>
-        ) : (
-          tickets.map((ticket) => (
-            <div
-              key={`${ticket.orderId}-${ticket.movieId}`} 
-              className="cursor-pointer"
-              onClick={() => navigate(`/history/${ticket.movieId}`)}
-            >
-              <img
-                src={ticket.image}
-                alt={ticket.title}
-                className="w-[166px] h-[250px] object-cover rounded-lg shadow-md"
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-x-4 gap-y-6 justify-center">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <Skeleton.Button
+                key={index}
+                active
+                style={{
+                  width: "100%",
+                  height: "0",
+                  paddingTop: "150%",
+                  borderRadius: "0.5rem",
+                  backgroundColor: "#333",
+                }}
               />
-              <p className="text-sm text-center mt-2 font-bold">{ticket.title}</p>
+            ))}
+          </div>
+        ) : tickets.length === 0 ? (
+          <p>{t("no.tickets")}</p>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-x-4 gap-y-6 justify-center">
+
+
+              {paginatedTickets.map((ticket) => (
+                <div
+                  key={`${ticket.orderId}-${ticket.movieId}`}
+                  className="cursor-pointer"
+                  onClick={() => navigate(`/history/${ticket.movieId}`)}
+                >
+                  <div className="w-full aspect-[2/3] relative rounded-lg overflow-hidden shadow-md">
+                    <img
+                      src={ticket.image}
+                      alt={ticket.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <p className="text-sm text-center mt-2 font-bold">{ticket.title}</p>
+                </div>
+              ))}
             </div>
-          ))
+
+            <div className="hidden sm:flex justify-center p-8">
+              <Pagination
+                current={currentPage}
+                pageSize={pageSize}
+                total={tickets.length}
+                onChange={handlePageChange}
+                showSizeChanger={false}
+                className="custom-pagination"
+              />
+            </div>
+
+          </>
         )}
       </div>
       <BottomNav />
-    </div>
     </>
   );
 };

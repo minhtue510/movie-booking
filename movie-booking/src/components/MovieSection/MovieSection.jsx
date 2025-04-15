@@ -133,8 +133,8 @@ const MovieSection = ({ titleKey, movies }) => {
   };
 
   return (
-    <div className="mt-6 w-full">
-      <h2 className="text-xl font-semibold ml-3 text-custom-red mb-4">{title}</h2>
+    <div className="mt-2 w-full">
+      <h2 className="text-20 font-semibold ml-3 text-white mb-6">{title}</h2>
 
       {isLoading ? (
         isNowPlaying ? (
@@ -188,13 +188,13 @@ const MovieSection = ({ titleKey, movies }) => {
                       }`}
                   >
                     {isNowPlaying && movie.rating != null && (
-                      <div className="bg-black/80 px-3 py-1 rounded-lg text-yellow-400 text-sm font-bold flex justify-center">
+                      <div className="bg-black/80 px-3 py-1 rounded-lg text-12 font-medium text-sm font-bold flex justify-center">
                         ⭐ {Number.isInteger(movie.rating) ? movie.rating : movie.rating.toFixed(1)}
                       </div>
                     )}
 
                     <h3
-                      className="text-white font-semibold text-base mt-1"
+                      className="text-white font-regular text-base mt-1"
                       style={{
                         display: "-webkit-box",
                         WebkitLineClamp: 2,
@@ -211,7 +211,7 @@ const MovieSection = ({ titleKey, movies }) => {
                           {movie.genres.map((genre, index) => (
                             <span
                               key={index}
-                              className="px-3 py-1 text-xs font-semibold text-white border border-white rounded-[10px]"
+                              className="px-3 py-1 text-10 font-regular text-white border border-white rounded-[10px]"
                             >
                               {genreTranslations[genre]?.[currentLang] || genre}
                             </span>

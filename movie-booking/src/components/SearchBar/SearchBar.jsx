@@ -3,7 +3,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { getMovies } from "../../services/getMovies";
 import { useTranslation } from "react-i18next";
-
+import searchIcon from "../../assets/icon/search.png";
 const SearchBar = ({ query, onSearchChange, showDropdown = true }) => {
   const [input, setInput] = useState(query || "");
   const [debouncedInput, setDebouncedInput] = useState("");
@@ -91,11 +91,12 @@ const SearchBar = ({ query, onSearchChange, showDropdown = true }) => {
         placeholder={t('searchPlaceholder')}
         value={input}
         onChange={handleChange}
-        className="h-11 w-full bg-black text-white-32 border border-gray-600 rounded-full px-5 pr-12 text-sm placeholder-gray-400 outline-none transition"
+        className="h-13 w-full bg-black text-14 font-regular text-gray border-2 border-gray rounded-[15px] px-5 pr-12 placeholder-gray-400 outline-none transition"
       />
-      <SearchOutlined
+      <img
+      src={searchIcon}
         style={{ color: "#FF5524" }}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl cursor-pointer"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl cursor-pointer "
         onClick={handleSearch}
       />
 
