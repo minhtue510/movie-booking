@@ -1,5 +1,15 @@
 {
-    "profile": "Profile",
+    "profile": {
+        "title": "Profile",
+        "userName": "Username",
+        "account": "Account",
+        "edit": "Edit Profile",
+        "changePassword": "Change Password",
+        "theme": "Themes",
+        "permissions": "Permissions", 
+        "about": "About Movies",
+        "more": "More"
+    },
     "myTickets": "My Tickets",
     "settings": "Settings",
     "about": "About Us",
@@ -68,6 +78,5 @@
         "fri": "Sun",
         "sat": "Sat",
         "sun": "Sun"
-      }
-
+    }
 }

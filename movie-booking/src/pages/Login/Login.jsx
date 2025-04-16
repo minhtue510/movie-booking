@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UserOutlined, EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import { UserOutlined, EyeInvisibleOutlined, EyeOutlined, CaretDownOutlined } from "@ant-design/icons";
 import background from "../../assets/images/background.png";
 import passwordIcon from "../../assets/icon/password.png";
 import googleBtn from "../../assets/icon/google.png";
@@ -59,24 +59,29 @@ const Login = () => {
         }
     };
 
-     const currentLang = i18n.language;
-      const toggleLang = currentLang === "vi" ? "en" : "vi";
-      const langAssets = {
+    const currentLang = i18n.language;
+    const toggleLang = currentLang === "vi" ? "en" : "vi";
+    const langAssets = {
         vi: {
-          label: "VIE",
-          icon: vnFlag,
+            label: "VIE",
+            icon: vnFlag,
         },
         en: {
-          label: "ENG",
-          icon: enFlag,
+            label: "ENG",
+            icon: enFlag,
         },
-      };
+    };
+    const handleLangChange = (lang) => {
+        i18n.changeLanguage(lang);
+    };
 
     return (
         <>
             <Header />
-            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative">
-                <div className="absolute top-0 left-0 w-full h-[30%]">
+
+            <div className="min-h-screen w-full bg-black text-white flex items-center justify-center relative px-4">
+
+                <div className="absolute top-0 left-0 w-full h-[30%] md:h-[30%] lg:h-[30%]">
                     <img
                         src={background}
                         alt="Background"
@@ -84,12 +89,30 @@ const Login = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black"></div>
                 </div>
+                <div className="absolute top-4 right-4 sm:hidden block z-10">
+                    <div
+                        className="px-3 py-1 rounded-full bg-[#1f1f1f] text-white text-sm cursor-pointer flex items-center gap-2"
+                        onClick={() => handleLangChange(toggleLang)}
+                    >
+                        <img
+                            src={langAssets[currentLang].icon}
+                            alt={currentLang}
+                            className="w-5 h-5"
+                        />
+                        <span>{langAssets[currentLang].label}</span>
+                    </div>
+                </div>
 
-                <div className="w-full max-w-xs text-center relative z-10 mt-[30%]">
-                <h1 className="text-3xl font-semibold">{t("login.title")}</h1>
-                
-
+                <div className="relative z-10 w-full 
+    max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl 
+    text-center rounded-xl p-4 sm:p-6 md:p-8 
+    mt-[40%] sm:mt-[30%] md:mt-[20%] lg:mt-[10%] 
+    mb-10 sm:mb-12 md:mb-16 lg:mb-20 
+    shadow-2xl "
+                >
+                    <h1 className="text-3xl font-semibold">{t("login.title")}</h1>
                     <p className="text-gray-400 text-sm mt-1">{t("login.subTitle")}</p>
+
 
                     <div className="mt-6 text-left">
                         <label className="block text-sm font-semibold text-[#A4A4A4]">{t("login.userName")}</label>
@@ -100,12 +123,13 @@ const Login = () => {
                             <input
                                 type="text"
                                 placeholder={t("login.userName")}
-                                className="w-full py-3 pl-12 pr-4 bg-[#181818] text-gray-300 border  border-white/50 rounded-lg focus:outline-none shadow-md shadow-[#00000080]"
+                                className="w-full py-3 pl-12 pr-4 bg-[#181818] text-gray-300 border border-white/50 rounded-lg focus:outline-none shadow-md shadow-[#00000080]"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
                     </div>
+
 
                     <div className="mt-4 text-left">
                         <label className="block text-sm font-semibold text-[#A4A4A4]">{t("login.password")}</label>
@@ -129,14 +153,16 @@ const Login = () => {
                         </div>
                     </div>
 
-                    {error && <p className="text-[#FF5524] text-sm mt-5 justify-center">{error}</p>}
+
+                    {error && <p className="text-[#FF5524] text-sm mt-5">{error}</p>}
+
 
                     <button
                         className="mt-6 w-full py-2 bg-gradient-to-r from-[#4D1C09] to-[#FFD980] rounded-xl text-lg font-semibold cursor-pointer disabled:opacity-50"
                         onClick={handleLogin}
                         disabled={loading}
                     >
-                      {loading ? t("login.logging") : t("signIn")}
+                        {loading ? t("login.logging") : t("signIn")}
                     </button>
 
 
@@ -146,7 +172,7 @@ const Login = () => {
                         <span className="w-1/4 border-t border-white"></span>
                     </div>
 
-                    <div className="btn-container">
+                    <div className="flex items-center justify-center gap-4">
                         <button className="btn-social">
                             <img src={googleBtn} alt="Google" />
                         </button>
@@ -158,15 +184,13 @@ const Login = () => {
                         </button>
                     </div>
 
-
-                    <div
-                        className="mt-6 text-sm text-gray-400 cursor-pointer hover:text-gray-300"
-                        onClick={() => navigate("/signup")}
-                    >
-                        {t("login.guest")}<span className="font-semibold text-gray-200"> {t("signUp")}</span>
+                    <div className="mt-6 text-sm text-gray-400 cursor-pointer hover:text-gray-300 relative z-20 !text-lg" onClick={() => navigate("/signup")}>
+                        {t("login.guest")}
+                        <span className="font-semibold text-gray-200"> {t("signUp")}</span>
                     </div>
                 </div>
             </div>
+
         </>
     );
 };

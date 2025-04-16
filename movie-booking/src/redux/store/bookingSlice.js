@@ -1,5 +1,3 @@
-// redux/store/bookingSlice.js
-
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -8,7 +6,6 @@ const initialState = {
   selectedTime: null,
   selectedDate: null,
   totalPrice: 0,
-  // Các trạng thái khác...
 };
 
 const bookingSlice = createSlice({
@@ -30,7 +27,6 @@ const bookingSlice = createSlice({
     setTotalPrice: (state, action) => {
       state.totalPrice = action.payload;
     },
-    // Các reducer khác...
   },
 });
 

@@ -17,6 +17,12 @@ import { useTranslation } from "react-i18next";
 import Header from "../../components/Header/Header";
 import { Skeleton } from 'antd';
 dayjs.extend(weekday);
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 const Booking = () => {
   const dispatch = useDispatch();
@@ -59,8 +65,6 @@ const Booking = () => {
       try {
         const response = await getShowtimes(movieId);
         const showtimes = response.data || response;
-        console.log("Danh sách showtimes từ API:", showtimes);
-
         if (showtimes.length > 0) {
           const firstShow = showtimes[0];
           if (firstShow.movieImage) setMovieImage(firstShow.movieImage);
@@ -79,7 +83,9 @@ const Booking = () => {
 
           const now = dayjs();
           const availableShowtimes = allTimes.filter(show => {
-            const showDateTime = dayjs(`${show.date} ${show.time}`, "YYYY-MDD HH:mm:ss");
+       
+            const showDateTime = dayjs(`${show.date} ${show.time}`, ["YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm:ss"]);
+
             return showDateTime.isAfter(now);
           });
 
@@ -203,6 +209,7 @@ const Booking = () => {
                         className={`w-12 h-20 flex flex-col items-center justify-center rounded-full text-md font-semibold
                                 ${isPastDate ? "past-date" : "default-date"} 
                                 ${dayjs(selectedDate).isSame(dayjs(date), "day") ? "selected-date" : ""}`}
+
                       >
                         <span className="text-lg">{formattedDate.format("DD")}</span>
                         <span className="text-sm">
@@ -257,25 +264,24 @@ const Booking = () => {
               )}
             </div>
           )}
-
+          
           {dates.length > 0 && selectedTime?.id && (
             <div className="mt-10 flex justify-around items-center w-full">
               <div className="flex flex-col items-center">
                 <h1 className="text-sm font-light text-gray-400">
                   {t("price")}
                 </h1>
-                <h1 className="text-xl">
-                  {Math.round(totalPrice).toLocaleString("vi-VN")} VND
-                </h1>
+                <h1 className="text-lg font-semibold">{totalPrice.toLocaleString()}</h1>
               </div>
-              <button
-                className={`button-buy rounded-full px-6 py-2 
-        ${selectedSeats.length === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-[#FF5524] hover:bg-[#e04620]"}`}
-                disabled={selectedSeats.length === 0}
-                onClick={handleBuyTicket}
-              >
-                {t("buyTicket")}
-              </button>
+
+              <div>
+                <button
+                  onClick={handleBuyTicket}
+                  className="text-white bg-[#FF5524] text-lg px-5 py-2 rounded-[15px] hover:bg-[#FF5524]/80"
+                >
+                  {t("buyTicket")}
+                </button>
+              </div>
             </div>
           )}
         </div>

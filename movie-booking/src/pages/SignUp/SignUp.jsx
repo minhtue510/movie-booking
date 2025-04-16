@@ -77,7 +77,8 @@ const SignUp = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black"></div>
             </div>
 
-            <div className="w-full max-w-xs text-center relative">
+            <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-0 max-w-sm sm:max-w-sm md:max-w-md lg:max-w-lg text-center rounded-xl p-6 mt-[30%] sm:mt-[25%] md:mt-[15%] lg:mt-[5%] shadow-2xl">
+
                 <h1 className="text-3xl font-semibold">{t("register.title")}</h1>
                 <p className="text-gray-400 text-sm mt-1">{t("register.subTitle")}</p>
 
@@ -187,7 +188,7 @@ const SignUp = () => {
                     </button>
                 </div>
 
-                <div className="mt-6 text-sm text-gray-400 cursor-pointer hover:text-gray-300"
+                <div className="mt-6 text-sm text-gray-400 cursor-pointer hover:text-gray-300 relative z-20 !text-lg"
                     onClick={() => navigate("/login")}
                 >
                     {t("register.guest")}<span className="font-semibold text-white"> {t("signIn")}</span>

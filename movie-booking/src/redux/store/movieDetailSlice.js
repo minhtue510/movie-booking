@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   selectedMovie: null,
-  topCast: {}, // Lưu thông tin diễn viên theo movieId
+  topCast: {}, 
 };
 
 const movieDetailSlice = createSlice({
@@ -14,7 +14,6 @@ const movieDetailSlice = createSlice({
     },
     setTopCast: (state, action) => {
       const { movieId, cast } = action.payload;
-      // Chỉ cập nhật topCast cho movieId nếu chưa có
       if (!state.topCast[movieId]) {
         state.topCast[movieId] = cast;
       }

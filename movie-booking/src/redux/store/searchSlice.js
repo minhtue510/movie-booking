@@ -11,7 +11,7 @@ const moviesSlice = createSlice({
   name: 'movies',
   initialState: {
     all: [],
-    status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
+    status: 'idle', 
   },
   reducers: {},
   extraReducers: (builder) => {

@@ -1,5 +1,15 @@
 {
-    "profile": "Trang cá nhân",
+    "profile": {
+        "title": "Trang cá nhân",
+        "userName": "Tên tài khoản",
+        "account": "Tài khoản",
+        "edit": "Chỉnh sửa thông tin",
+        "changePassword": "Đổi mật khẩu",
+        "theme": "Chủ đề",
+        "permissions": "Quyền hạn", 
+        "about": "Về Phim",
+        "more": "Nhiều hơn"
+    },
     "myTickets": "Vé của tôi",
     "settings": "Cài đặt",
     "about": "Về chúng tôi",

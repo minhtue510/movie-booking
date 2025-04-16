@@ -35,14 +35,15 @@ const AppHeader = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
-    navigate("/home");
-    window.location.reload();
+    // navigate("/");
+    navigate("/home", { replace: true });
+    // window.location.reload();
   };
   const iconClass = "w-4 h-4 mr-4";
   const loggedInItems = [
     {
       key: "profile",
-      label: t("profile"),
+      label: t("profile.title"),
       icon: <UserOutlined className={iconClass} />,
     },
     {

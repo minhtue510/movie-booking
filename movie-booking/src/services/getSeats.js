@@ -16,7 +16,6 @@ export const getShowtimes= async (movieId) => {
             const data = response.data; 
 
           if (data && Array.isArray(data.data)) {
-              console.log("Danh sách ghế:", data.data);
               return data.data;
           } else {
               console.log("API trả về dữ liệu không đúng định dạng.");
@@ -33,7 +32,6 @@ export const getShowtimes= async (movieId) => {
         const response = await api.get(`/bookings/booked-seat/${showtimeId}`);
         if (Array.isArray(response.data)) {
             return response.data;  
-            console.log("Ghế đã được đặt: ",response);
         } else {
             console.error("Dữ liệu không phải là mảng:", response.data);
             return [];
