@@ -41,7 +41,7 @@ const Booking = () => {
   const [seats, setSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const timeSwiperRef = useRef(null);
-
+  const [noShowtimes, setNoShowtimes] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -83,7 +83,7 @@ const Booking = () => {
 
           const now = dayjs();
           const availableShowtimes = allTimes.filter(show => {
-       
+
             const showDateTime = dayjs(`${show.date} ${show.time}`, ["YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm:ss"]);
 
             return showDateTime.isAfter(now);
@@ -94,7 +94,7 @@ const Booking = () => {
             setSelectedDate(earliestShowtime.date);
             setSelectedTime(earliestShowtime);
           } else {
-            console.log("Không có suất chiếu nào có thể đặt.");
+            setNoShowtimes(true);
           }
         }
       } catch (error) {
@@ -161,6 +161,7 @@ const Booking = () => {
     }
   };
 
+
   return (
     <><Header />
       <div className="bg-black min-h-screen text-white relative flex flex-col items-center">
@@ -192,7 +193,11 @@ const Booking = () => {
               />
             )
           )}
-
+          {noShowtimes && (
+            <div className="flex justify-center items-center h-48 text-lg text-gray-500">
+             {t("noShowtime")}
+            </div>
+          )}
           {loading ? (
             <Skeleton active paragraph={{ rows: 2 }} />
           ) : (
@@ -227,7 +232,7 @@ const Booking = () => {
           )}
 
           {selectedDate && (
-            <div className="mt-4 w-full text-center">
+            <div className="mt-2 w-full text-center">
               {loading ? (
                 <Skeleton active paragraph={{ rows: 1 }} />
               ) : (
@@ -239,16 +244,16 @@ const Booking = () => {
                     centeredSlides={true}
                     onSwiper={(swiper) => (timeSwiperRef.current = swiper)}
                     modules={[FreeMode]}
-                    className="w-full mt-4"
+                    className="w-full mt-2"
                   >
                     {filteredTimes.map((showtime, idx) => {
                       const isToday = dayjs(selectedDate).isSame(dayjs(), "day");
                       const isPastTime = isToday && dayjs().isAfter(dayjs(showtime.time, "HH:mm:ss"));
                       return (
-                        <SwiperSlide key={idx} className="flex justify-center">
+                        <SwiperSlide key={idx} className="!w-auto px-2">
                           <div
                             onClick={() => !isPastTime && setSelectedTime(showtime)}
-                            className={`py-2 px-4 rounded-full text-center 
+                            className={`py-2 px-4 rounded-full text-center
                                   ${isPastTime ? "past-time" : "default-time border border-gray-500"} 
                                   ${selectedTime?.id === showtime.id ? "selected-time" : ""}`}
                           >
@@ -264,9 +269,9 @@ const Booking = () => {
               )}
             </div>
           )}
-          
+
           {dates.length > 0 && selectedTime?.id && (
-            <div className="mt-10 flex justify-around items-center w-full">
+            <div className="mt-10 flex justify-around items-center w-full pb-10">
               <div className="flex flex-col items-center">
                 <h1 className="text-sm font-light text-gray-400">
                   {t("price")}

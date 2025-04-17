@@ -6,7 +6,7 @@
         "edit": "Chỉnh sửa thông tin",
         "changePassword": "Đổi mật khẩu",
         "theme": "Chủ đề",
-        "permissions": "Quyền hạn", 
+        "permissions": "Quyền hạn",
         "about": "Về Phim",
         "more": "Nhiều hơn"
     },
@@ -41,7 +41,6 @@
         "another": "Hoặc tiếp tục với",
         "guest": "Không có tài khoản ?"
     },
-
     "home": {
         "nowPlaying": "Phim đang chiếu",
         "popular": "Phim phổ biến",
@@ -87,5 +86,7 @@
         "fri": "Thứ 6",
         "sat": "Thứ 7",
         "sun": "CN"
-      }
+    },
+    "noShowtime": "Tạm thời không có suất chiếu",
+    "futureShowtime": "Chưa có thông tin suất chiếu"
 }

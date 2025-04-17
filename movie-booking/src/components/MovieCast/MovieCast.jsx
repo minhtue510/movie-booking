@@ -24,11 +24,31 @@ const MovieCast = ({ movieId }) => {
 
   return (
     <Swiper
-      slidesPerView={5}
-      spaceBetween={20}
       freeMode={true}
       modules={[FreeMode]}
       className="mt-4"
+      breakpoints={{
+        0: {
+          slidesPerView: 3.2,
+          spaceBetween: 12,
+        },
+        640: {
+          slidesPerView: 4,
+          spaceBetween: 14,
+        },
+        768: {
+          slidesPerView: 5,
+          spaceBetween: 16,
+        },
+        1024: {
+          slidesPerView: 6,
+          spaceBetween: 18,
+        },
+        1280: {
+          slidesPerView: 7,
+          spaceBetween: 20,
+        },
+      }}
     >
       {topCast.length > 0 ? (
         topCast.map((actor) => (
@@ -36,10 +56,15 @@ const MovieCast = ({ movieId }) => {
             <img
               src={actor.image}
               alt={actor.name}
-              className="w-[80px] h-[90px] object-cover rounded-[50px] border border-gray-600 shadow-lg"
+              className="rounded-full border border-gray-600 shadow-lg
+                         w-[60px] h-[70px] sm:w-[70px] sm:h-[80px] sm:rounded[70%] md:w-[80px] md:h-[90px] lg:w-[90px] lg:h-[100px]"
             />
-            <span className="text-white mt-2 text-center font-medium text-10">{actor.name}</span>
-            <p className="text-white text-center font-light text-10">{actor.role}</p>
+            <span className="text-white mt-2 text-center font-medium text-[10px] sm:text-[11px] md:text-sm lg:text-base">
+              {actor.name}
+            </span>
+            <p className="text-white text-center font-light text-[9px] sm:text-[10px] md:text-xs lg:text-sm">
+              {actor.role}
+            </p>
           </SwiperSlide>
         ))
       ) : (

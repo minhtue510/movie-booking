@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 
 const Tickets = () => {
   const [tickets, setTickets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);  
   const navigate = useNavigate();
   const location = useLocation();
   const { orderId } = useParams();
@@ -39,17 +40,21 @@ const Tickets = () => {
         })
         .catch((err) => {
           console.error("Lỗi khi gọi API getOrderDetail:", err);
+        })
+        .finally(() => {
+          setIsLoading(false); 
         });
     } else {
       const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
       setTickets(storedTickets);
+      setIsLoading(false);
     }
-  }, [location.search]);
+  }, [location.search, orderId]);
 
   return (
-    <><Header />
+    <>
+      <Header />
       <div className="bg-black h-screen flex flex-col items-center p-4 text-white relative overflow-hidden">
-
         <h1 className="text-xl font-bold pb-4">{t("myTickets")}</h1>
         <button
           onClick={() => navigate("/home")}
@@ -58,11 +63,12 @@ const Tickets = () => {
           <CloseCircleOutlined className="text-xl" />
         </button>
 
-
         <div className="flex-1 flex flex-col items-center w-full overflow-y-auto h-full">
-          {tickets.length === 0 ? (
+          {isLoading ? (
+            <div className="bg-[#333] animate-pulse rounded-3xl w-[85%] max-w-[350px] h-[90%] flex flex-col items-center relative shadow-2xl pb-4 mt-4">
+            </div>
+          ) : tickets.length === 0 ? (
             <p className="text-gray-400">{t("ticket.empty")}</p>
-
           ) : (
             tickets.map((ticket, index) => {
               const formattedDate = dayjs(ticket.selectedDate).format("ddd, D , MMMM , YYYY");
@@ -84,15 +90,17 @@ const Tickets = () => {
                   <div className="w-full h-[10vh] bg-[#FF5524] text-center py-4 border-t-2 border-dashed border-black relative">
                     <div className="absolute -left-8 top-[-35px] w-16 h-16 bg-black rounded-full"></div>
                     <div className="absolute -right-8 top-[-35px] w-16 h-16 bg-black rounded-full"></div>
-                    <div className="flex items-center gap-10 w-full justify-center mt-3">
+                    <div className="flex items-center gap-10 w-full justify-center">
                       <div className="flex flex-col items-center text-white gap-2">
-                        <p className="font-bold text-3xl leading-none">
+                        <p className="font-bold text-xl leading-none">
                           {formattedDate.split(",")[1]}
                         </p>
-                        <p className="text-sm">{formattedDate.split(",")[0]}</p>
+                        {/* <p className="text-sm">{formattedDate.split(",")[0]}</p> */}
+                        <p className="text-sm">{t(`days.${formattedDate.split(",")[0].toLowerCase()}`)}</p>
+                        
                       </div>
                       <div className="flex flex-col items-center text-white gap-2">
-                        <ClockCircleOutlined className="text-3xl" />
+                        <ClockCircleOutlined className="text-xl" />
                         <p className="text-sm">{formattedTime}</p>
                       </div>
                     </div>

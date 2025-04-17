@@ -6,11 +6,9 @@ export const getMovies = async (searchTerm = "") => {
         let page = 1;
         let totalPages = 1;
         const searchQuery = searchTerm ? `&Search=${searchTerm}` : "";
-
         do {
             const response = await api.get(`/movies?page=${page}&pageSize=100${searchQuery}`);
             const result = response.data;
-
             const moviesArray = Array.isArray(result.data) ? result.data : [];
 
             allMovies = [
@@ -27,8 +25,6 @@ export const getMovies = async (searchTerm = "") => {
                     status: movie.status?.toLowerCase() || "unknown",
                 })),
             ];
-
-
             totalPages = result.totalPages;
             page++;
         } while (page <= totalPages);
@@ -40,8 +36,6 @@ export const getMovies = async (searchTerm = "") => {
     }
 };
 
-
-
 export const getMovieDetail = async (movieId) => {
     try {
         const response = await api.get(`/movies/${movieId}`);
@@ -50,7 +44,6 @@ export const getMovieDetail = async (movieId) => {
         if (!movie) {
             throw new Error("Không tìm thấy dữ liệu phim");
         }
-
         return {
             id: movie.movieId,
             title: movie.title,
@@ -77,37 +70,27 @@ export const getMovieMedia = async (movieId) => {
     try {
         const response = await api.get(`/movie-medias/get-by-movie/${movieId}`);
         const mediaList = response.data;
-
-        console.log("Dữ liệu trả về từ API:", mediaList);
-
         if (!Array.isArray(mediaList) || mediaList.length === 0) {
             return { images: [], videos: [] };
         }
-
         const images = mediaList
             .filter(media => media.mediaType.toLowerCase() === "image")
             .map(media => media.mediaURL);
-
         const videos = mediaList
             .filter(media => media.mediaType.toLowerCase() === "video")
             .map(media => {
                 const videoURL = media.mediaURL;
                 let videoId = "";
-
                 if (videoURL.includes("youtube.com/watch?v=")) {
                     videoId = videoURL.split("v=")[1]?.split("&")[0];
                 } else if (videoURL.includes("youtu.be/")) {
                     videoId = videoURL.split("youtu.be/")[1]?.split("?")[0];
                 }
-
                 return videoId
                     ? `https://www.youtube-nocookie.com/embed/${videoId}?modestbranding=1&rel=0&enablejsapi=1&autoplay=1&controls=1`
                     : null;
-
-
             })
             .filter(Boolean);
-
         return { images, videos };
     } catch (error) {
         console.error("Lỗi khi lấy ảnh/phim:", error);

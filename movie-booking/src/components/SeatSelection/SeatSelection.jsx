@@ -56,7 +56,6 @@ const SeatSelection = ({ selectedSeats, setSelectedSeats, showtime }) => {
     return (
         <div className="flex flex-col items-center">
             <div className="text-center bg-[#595959] w-[260px] h-2 mb-5 rounded-lg"></div>
-
             <div className="flex flex-col items-center gap-2">
   {
     [...Array(Math.ceil(seats.filter(seat => seat.type === 'Ghế thường').length / 10))].map((_, rowIndex) => {

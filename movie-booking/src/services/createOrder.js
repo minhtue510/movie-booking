@@ -1,7 +1,6 @@
 import api from './config'; 
 export const createOrder = async (userId, selectedSeats, showtimeId) => {
   try {
-   
     const orderDetails = selectedSeats.map(seat => ({
       ticketRequests: [
         {
@@ -36,31 +35,3 @@ export const createPaymentUrl = async (orderId, amount) => {
   };
   
 
-// import api from './config';
-
-// export const createPaymentUrl = async (userId, selectedSeats, showtimeId) => {
-//   try {
-//     const orderDetails = selectedSeats.map(seat => ({
-//       ticketRequests: [
-//         {
-//           showTimeId: showtimeId,
-//           seatId: seat,
-//         }
-//       ]
-//     }));
-
-//     const response = await api.post('/payments/url', {
-//       userId,
-//       orderDetails
-//     });
-
-//     const data = response.data;
-//     return {
-//       url: data.url,
-//       orderId: data.orderId || data.id,
-//     };
-//   } catch (error) {
-//     console.error('Error in createOrderAndPaymentUrl:', error);
-//     throw new Error('Failed to create order and get payment URL.');
-//   }
-// };

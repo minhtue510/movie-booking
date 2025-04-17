@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Layout, Avatar, Dropdown, Modal } from "antd";
 import { UserOutlined, InfoCircleOutlined, SettingOutlined, CaretDownOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import logoutIcon from "../../assets/icon/logout.png";
@@ -19,7 +19,8 @@ const AppHeader = () => {
   const user = useSelector((state) => state.auth.user);
   const isLoggedIn = !!user;
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/login";
   const { t, i18n } = useTranslation();
 
   const username =
@@ -35,9 +36,9 @@ const AppHeader = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
-    // navigate("/");
-    navigate("/home", { replace: true });
-    // window.location.reload();
+    navigate("/");
+    // navigate("/home", { replace: true });
+    window.location.reload();
   };
   const iconClass = "w-4 h-4 mr-4";
   const loggedInItems = [
@@ -94,13 +95,16 @@ const AppHeader = () => {
 
         </div>
 
-        <div className="w-1/2">
-          <SearchBar />
-        </div>
+        {!isLoginPage && (
+          <div className="w-1/2 ">
+            <SearchBar />
+          </div>
+        )}
+
 
         <div className="flex items-center gap-4">
           <Dropdown
-            trigger={["hover"]} 
+            trigger={["hover"]}
             menu={{
               items: [
                 {

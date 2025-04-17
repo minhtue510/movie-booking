@@ -19,6 +19,8 @@ import { useDispatch } from "react-redux";
 import { fetchUserFromToken, logoutUser } from "./redux/store/authSlice";
 import { jwtDecode } from "jwt-decode";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import { App as CapacitorApp } from '@capacitor/app';
+
 const AppContent = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,44 +34,44 @@ const AppContent = () => {
     location.pathname.includes(path)
   );
 
-useEffect(() => {
-  const token = localStorage.getItem("accessToken");
-
-  if (isMobileDevice()) {
-    if (!token) {
-      navigate("/login");
-    } else {
-      try {
-        const decoded = jwtDecode(token);
-        const currentTime = Math.floor(Date.now() / 1000);
-
-        if (decoded.exp < currentTime) {
-          localStorage.removeItem("accessToken");
-          dispatch(logoutUser());
-          navigate("/login");
-          window.location.reload();
-        } else {
-          dispatch(fetchUserFromToken());
-        }
-      } catch (error) {
-        console.error("Lỗi giải mã token:", error);
-        localStorage.removeItem("accessToken");
-        dispatch(logoutUser());
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+  
+    if (isMobileDevice()) {
+      const currentPath = location.pathname;
+  
+      if (!token && currentPath !== "/signup" && currentPath !== "/login") {
         navigate("/login");
         window.location.reload();
       }
-    }
-  } else {
-    if (token) {
-      try {
-        dispatch(fetchUserFromToken());
-      } catch (error) {
-        console.error("Lỗi khi fetch user từ token:", error);
+    } else {
+      if (token) {
+        try {
+          dispatch(fetchUserFromToken());
+        } catch (error) {
+          console.error("Lỗi khi fetch user từ token:", error);
+        }
       }
     }
-  }
-}, [dispatch, navigate]);
+  }, [dispatch, navigate, location.pathname]);
+  
 
+useEffect(() => {
+  const handleDeepLink = (event) => {
+    const url = event.url;
+    if (url?.startsWith('myapp://')) {
+      const urlParams = new URLSearchParams(url.split('?')[1]);
+      const success = urlParams.get('success');
+      const message = urlParams.get('message');
+      const orderId = urlParams.get('orderId');
+      const movieId = urlParams.get('movieId');
+      navigate(`/tickets/ticket/${orderId}`);
+    }
+  };
+
+  CapacitorApp.addListener('appUrlOpen', handleDeepLink);
+
+}, [navigate]);
 
   return (
     <div>

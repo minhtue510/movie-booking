@@ -78,5 +78,7 @@
         "fri": "Sun",
         "sat": "Sat",
         "sun": "Sun"
-    }
+    },
+    "noShowtime": "No showtimes available now",
+    "futureShowtime": "No showtimes information" 
 }

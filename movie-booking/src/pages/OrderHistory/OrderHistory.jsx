@@ -11,9 +11,7 @@ const OrderHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
-
   const { tickets, loading, fetched } = useSelector((state) => state.history);
-
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
