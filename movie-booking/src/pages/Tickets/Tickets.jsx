@@ -53,11 +53,10 @@ const Tickets = () => {
 
   return (
     <>
-      <Header />
       <div className="bg-black h-screen flex flex-col items-center p-4 text-white relative overflow-hidden">
         <h1 className="text-xl font-bold pb-4">{t("myTickets")}</h1>
         <button
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/")}
           className="absolute top-4 left-12 w-[34px] h-[34px] bg-[#FF5524] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#FF5524] transition block md:hidden"
         >
           <CloseCircleOutlined className="text-xl" />

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Layout, Avatar, Dropdown, Modal } from "antd";
-import { UserOutlined, InfoCircleOutlined, SettingOutlined, CaretDownOutlined } from "@ant-design/icons";
+import { UserOutlined} from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SearchBar from "../../components/SearchBar/SearchBar";
@@ -9,19 +9,25 @@ import avatarImg from "../../assets/images/avatar.png";
 import ticketIcon from "../../assets/icon/ticket.svg";
 import logo from "../../assets/images/logo.png";
 import { useTranslation } from "react-i18next";
-import i18n from "../../i18n";
-import vnFlag from "../../assets/icon/vietnam.svg";
-import enFlag from "../../assets/icon/eng.png";
+import ChangeLanguage from "../ChangeLanguage/ChangeLanguage";
 const { Header } = Layout;
 
 const AppHeader = () => {
+  const [query, setQuery] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const isLoggedIn = !!user;
   const navigate = useNavigate();
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
-  const { t, i18n } = useTranslation();
+  const isSignUpPage = location.pathname === "/signup";
+  const isConfirmEmail = location.pathname === "/confirm-email";
+  const isDashboard = location.pathname === "/dashboard";
+  const isEditMovies= location.pathname === "/dashboard/edit-movies";
+  const isAddMovies= location.pathname === "/dashboard/add-movies";
+
+  
+  const { t } = useTranslation();
 
   const username =
     user?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || "User";
@@ -36,8 +42,9 @@ const AppHeader = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
     navigate("/");
-    // navigate("/home", { replace: true });
     window.location.reload();
   };
   const iconClass = "w-4 h-4 mr-4";
@@ -53,16 +60,6 @@ const AppHeader = () => {
       icon: <img src={ticketIcon} alt="ticket" className={iconClass} />,
     },
     {
-      key: "settings",
-      label: t("settings"),
-      icon: <SettingOutlined className={iconClass} />,
-    },
-    {
-      key: "about",
-      label: t("about"),
-      icon: <InfoCircleOutlined className={iconClass} />,
-    },
-    {
       type: "divider",
     },
     {
@@ -71,71 +68,33 @@ const AppHeader = () => {
       icon: <img src={logoutIcon} alt="logout" className={iconClass} />,
     },
   ];
-  const currentLang = i18n.language;
-  const toggleLang = currentLang === "vi" ? "en" : "vi";
-  const langAssets = {
-    vi: {
-      label: "VIE",
-      icon: vnFlag,
-    },
-    en: {
-      label: "ENG",
-      icon: enFlag,
-    },
-  };
+ 
   return (
     <>
-      <Header className="hidden md:flex items-center justify-between bg-[#1f1f1f] px-5 py-10">
+    {!isDashboard && !isEditMovies && !isAddMovies &&(
+      <Header className="hidden md:flex w-full z-50 flex items-center justify-between bg-[#1f1f1f] px-10 py-10 shadow-md h-[72px] fixed top ">
         <div
           className="flex flex-cols justify-center items-center text-white font-bold text-xl cursor-pointer"
-          onClick={() => navigate('/home')}
+          onClick={() => navigate('/')}
         >
           <img src={logo} alt="logo" className="w-full h-[50px] mr-2" />
-
-
         </div>
 
-        {!isLoginPage && (
+        {!isSignUpPage && !isLoginPage && !isConfirmEmail && !isDashboard && !isEditMovies && !isAddMovies &&(
           <div className="w-1/2 ">
-            <SearchBar />
+            <SearchBar
+              query={query}
+              onSearchChange={(value) => {
+                 setQuery(value);
+                navigate(`/search?query=${value}`);
+              }}
+            />
           </div>
         )}
 
 
         <div className="flex items-center gap-4">
-          <Dropdown
-            trigger={["hover"]}
-            menu={{
-              items: [
-                {
-                  key: toggleLang,
-                  label: (
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={langAssets[toggleLang].icon}
-                        alt={toggleLang}
-                        className="w-5 h-5"
-                      />
-                      {langAssets[toggleLang].label}
-                    </div>
-                  ),
-                  onClick: () => i18n.changeLanguage(toggleLang),
-                },
-              ],
-            }}
-            placement="bottom"
-            arrow
-          >
-            <div className="px-3 py-1 rounded-full bg-[#1f1f1f] text-white text-sm cursor-pointer flex items-center gap-2">
-              <img
-                src={langAssets[currentLang].icon}
-                alt={currentLang}
-                className="w-5 h-5"
-              />
-              <span>{langAssets[currentLang].label}</span>
-              <CaretDownOutlined className="text-white text-sm" />
-            </div>
-          </Dropdown>
+         <ChangeLanguage/>
 
 
           {isLoggedIn ? (
@@ -155,14 +114,14 @@ const AppHeader = () => {
           ) : (
             <div className="flex gap-4">
               <button
-                onClick={() => navigate("/signUp")}
-                className="w-[120px] h-[40px] flex items-center justify-center text-sm font-semibold text-white border border-white rounded-full hover:bg-white hover:text-black transition-all duration-300"
+                onClick={() => navigate("/signup")}
+                className="w-[120px] h-[40px] flex items-center justify-center text-sm font-semibold text-white border border-white rounded-full hover:bg-white hover:text-black transition-all duration-300 cursor-pointer"
               >
                 {t("signUp")}
               </button>
               <button
                 onClick={() => navigate("/login")}
-                className="w-[120px] h-[40px] flex items-center justify-center text-sm font-semibold bg-[#FF5524] text-white rounded-full hover:bg-[#e14a1f] transition-all duration-300"
+                className="w-[120px] h-[40px] flex items-center justify-center text-sm font-semibold bg-[#FF5524] text-white rounded-full hover:bg-[#e14a1f] transition-all duration-300 cursor-pointer"
               >
                 {t("signIn")}
               </button>
@@ -171,7 +130,7 @@ const AppHeader = () => {
         </div>
 
       </Header>
-
+    )}
       <Modal
         title={t('logout.confirmTitle')}
         open={isModalVisible}
@@ -183,6 +142,7 @@ const AppHeader = () => {
         <p>{t('logout.confirmMessage')}</p>
       </Modal>
     </>
+    
   );
 };
 

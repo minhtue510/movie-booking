@@ -16,6 +16,7 @@ export const getMovies = async (searchTerm = "") => {
                 ...moviesArray.map((movie) => ({
                     id: movie.movieId,
                     title: movie.title,
+                    nation: movie.nation || "Không xác định",
                     rating: movie.rating || 0,
                     genres: Array.isArray(movie.genres) ? movie.genres : [],
                     image:
@@ -44,6 +45,14 @@ export const getMovieDetail = async (movieId) => {
         if (!movie) {
             throw new Error("Không tìm thấy dữ liệu phim");
         }
+        const actors = Array.isArray(movie.actors)
+        ? movie.actors.map((actor) => ({
+              id: actor.id,
+              name: actor.name,
+              image: actor.imageURL || "https://via.placeholder.com/100x150?text=No+Image",
+              role: actor.role || "Không xác định",
+          }))
+        : [];
         return {
             id: movie.movieId,
             title: movie.title,
@@ -54,6 +63,8 @@ export const getMovieDetail = async (movieId) => {
             rating: movie.rating,
             releaseDate: movie.releaseDate,
             ageRating: movie.ageRating,
+            media: movie.media || [],
+            actor: actors || [],
             genres: movie.genres || [],
             image: movie.imageMovie?.[0] || "https://via.placeholder.com/200x300?text=No+Image",
             background: movie.background || "https://via.placeholder.com/800x450?text=No+Background",
@@ -114,5 +125,17 @@ export const getMovieCast = async (movieId) => {
     }
 };
 
-
+export const updateMovie = async (movieId, movieData) => {
+    try {
+        const response = await api.put(`/movies/${movieId}`, movieData, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Lỗi khi cập nhật phim:", error);
+        throw error;
+    }
+};
 

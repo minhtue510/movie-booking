@@ -16,10 +16,17 @@ const authSlice = createSlice({
             state.user = null;
             localStorage.removeItem("accessToken");
         },
+        getUserFromToken(state) {
+            const token = localStorage.getItem("accessToken");
+            if (token) {
+                const decoded = jwtDecode(token);
+                state.user = decoded;
+            }
+        },
     },
 });
 
-export const { setUser, logoutUser } = authSlice.actions;
+export const { setUser, logoutUser, getUserFromToken  } = authSlice.actions;
 
 export const fetchUserFromToken = () => (dispatch) => {
     const token = localStorage.getItem("accessToken");

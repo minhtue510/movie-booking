@@ -8,12 +8,12 @@ import { useTranslation } from "react-i18next";
 import { genreTranslations } from "../../locales/genreTranslations";
 
 const useResponsive = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 639);
   const [width, setWidth] = useState(window.innerWidth);
   useEffect(() => {
     const onResize = () => {
       const currentWidth = window.innerWidth;
-      setIsMobile(currentWidth <= 768);
+      setIsMobile(currentWidth <= 639);
       setWidth(currentWidth);
     };
     window.addEventListener("resize", onResize);
@@ -30,11 +30,11 @@ const NowPlayingSkeleton = () => {
   else if (width >= 768) slides = 3;
   return (
     <div
-      className={`mt-2 w-full px-3 flex gap-2 md:gap-4 xl:gap-6 ${width < 768 ? 'justify-center' : 'justify-around'
+      className={`mt-2 w-full px-3 flex gap-2 md:gap-4 xl:gap-6 ${width < 639 ? 'justify-center' : 'justify-around'
         }`}
     >
       {Array.from({ length: slides }).map((_, index) => {
-        const isMobile = width < 768;
+        const isMobile = width < 639;
         const centerIndex = Math.floor(slides / 2);
         const isCenter = index === centerIndex;
         const sizeClass = isMobile
@@ -101,7 +101,7 @@ const MovieSection = ({ titleKey, movies }) => {
   const title = t(`home.${titleKey}`);
   const { isMobile, width } = useResponsive();
   const [isLoading, setIsLoading] = useState(true);
-  const currentLang = i18n.language 
+  const currentLang = i18n.language
 
   const isNowPlaying = titleKey === "nowPlaying";
   const isUpcomingOrPopular = titleKey === "upcoming" || titleKey === "popular";
@@ -109,27 +109,34 @@ const MovieSection = ({ titleKey, movies }) => {
   useEffect(() => {
     setIsLoading(!(movies && movies.length > 0));
   }, [movies]);
-
-  const getSpaceBetween = () => (isNowPlaying ? (isMobile ? 10 : 10) : 10);
+  const getSpaceBetween = () => {
+    if (isNowPlaying) {
+      if (isMobile) return 20; // Mobile
+      if (width >= 1280) return 30; // Desktop lớn
+      if (width >= 1024) return 20; // Desktop vừa
+      return 15; // Tablet
+    }
+    return isMobile ? 10 : 20; // Upcoming/Popular
+  };
 
   const getSlidesPerView = () => {
     if (isNowPlaying) {
-      if (isMobile) return 1.5;
-      if (width >= 1280) return 5;
-      if (width >= 1024) return 3;
-      return 2;
+      if (isMobile) return 1.2; // Mobile
+      if (width >= 1280) return 5; // Desktop lớn
+      if (width >= 1024) return 3; // Desktop vừa
+      return 2; // Tablet
     }
-    return isMobile ? 2.2 : 5;
+    return isMobile ? 2.2 : 5.5; // Upcoming/Popular
   };
 
   const getImageSize = () => {
     if (isNowPlaying) {
-      if (isMobile) return "w-full h-[400px]";
-      if (width >= 1280) return "w-[350px] h-[500px]";
-      if (width >= 1024) return "w-[300px] h-[450px]";
-      return "w-[250px] h-[400px]";
+      if (isMobile) return "w-full h-[400px]"; // Mobile
+      if (width >= 1280) return "w-[350px] h-[500px]"; // Desktop lớn
+      if (width >= 1024) return "w-[300px] h-[450px]"; // Desktop vừa
+      return "w-[250px] h-[400px]"; // Tablet
     }
-    return "w-44 h-[220px]";
+    return isMobile ? "w-[150px] h-[200px]" : "w-44 h-[220px]"; // Upcoming/Popular
   };
 
   return (
@@ -194,7 +201,8 @@ const MovieSection = ({ titleKey, movies }) => {
                     )}
 
                     <h3
-                      className="text-white font-regular text-base mt-1"
+                      className={`text-white font-regular text-base mt-1 ${isNowPlaying ? "text-center" : "text-left"
+                        }`}
                       style={{
                         display: "-webkit-box",
                         WebkitLineClamp: 2,

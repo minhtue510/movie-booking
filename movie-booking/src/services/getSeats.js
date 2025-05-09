@@ -1,14 +1,30 @@
 import api from "./config";
 
-export const getShowtimes= async (movieId) => {
+export const getShowtimes = async (movieId) => {
     try {
-      const response = await api.get(`/bookings/showtimes/${movieId}`);
-      return response.data;
+        let allShowtimes = [];
+        let page = 1;
+        const pageSize = 100; 
+        while (true) {
+            const response = await api.get(`/bookings/showtimes/${movieId}?page=${page}&pageSize=${pageSize}`);
+            const showtimes = response.data.data; 
+            if (!showtimes || showtimes.length === 0) {
+                break;
+            }
+            allShowtimes = [...allShowtimes, ...showtimes];
+            if (showtimes.length < pageSize) {
+                break; 
+            }
+            page++;
+        }
+
+        return allShowtimes; 
     } catch (error) {
-      console.error("Error fetching showtimes:", error);
-      return null;
+        console.error("Lỗi khi gọi API suất chiếu:", error);
+        return null;
     }
-  };
+};
+
 
   export const getSeats = async (showtimeId) => {
       try {
@@ -18,7 +34,6 @@ export const getShowtimes= async (movieId) => {
           if (data && Array.isArray(data.data)) {
               return data.data;
           } else {
-              console.log("API trả về dữ liệu không đúng định dạng.");
               return [];
           }
       } catch (error) {

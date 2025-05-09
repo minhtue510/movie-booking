@@ -13,6 +13,7 @@ import "../Booking/Booking.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserFromToken } from "../../redux/store/authSlice";
 import { createOrder, createPaymentUrl } from "../../services/createOrder";
+import noShowtimeIcon from "../../assets/icon/no-showtime.png";
 import { useTranslation } from "react-i18next";
 import Header from "../../components/Header/Header";
 import { Skeleton } from 'antd';
@@ -161,12 +162,32 @@ const Booking = () => {
     }
   };
 
+  useEffect(() => {
+    if (selectedDate && times.length > 0) {
+      const now = dayjs();
+      const filtered = times.filter(time => time.date === selectedDate);
+
+      const availableTimes = filtered.filter(show => {
+        const showDateTime = dayjs(`${show.date} ${show.time}`, ["YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm:ss"]);
+        return showDateTime.isAfter(now);
+      });
+
+      if (availableTimes.length > 0) {
+        const earliest = availableTimes.sort((a, b) =>
+          dayjs(`${a.date} ${a.time}`).diff(dayjs(`${b.date} ${b.time}`))
+        )[0];
+        setSelectedTime(earliest);
+      } else {
+        setSelectedTime(null); 
+      }
+    }
+  }, [selectedDate, times]);
+
 
   return (
-    <><Header />
       <div className="bg-black min-h-screen text-white relative flex flex-col items-center">
         <div className="relative w-full h-[300px]">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/100"></div>
+          <div className="absolute inset-0 bg-gradient-to-b to-black/100"></div>
           {loading ? (
             <Skeleton active className="w-full h-full" />
           ) : (
@@ -194,8 +215,12 @@ const Booking = () => {
             )
           )}
           {noShowtimes && (
-            <div className="flex justify-center items-center h-48 text-lg text-gray-500">
-             {t("noShowtime")}
+            <div className="flex flex-col justify-center items-center h-48 text-lg text-gray-500">
+              <img
+              src={noShowtimeIcon}
+              >
+              </img>
+              {t("noShowtime")}
             </div>
           )}
           {loading ? (
@@ -212,7 +237,7 @@ const Booking = () => {
                       <div
                         onClick={() => !isPastDate && setSelectedDate(date)}
                         className={`w-12 h-20 flex flex-col items-center justify-center rounded-full text-md font-semibold
-                                ${isPastDate ? "past-date" : "default-date"} 
+                                ${isPastDate ? "past-date" : "default-date cursor-pointer"} 
                                 ${dayjs(selectedDate).isSame(dayjs(date), "day") ? "selected-date" : ""}`}
 
                       >
@@ -253,8 +278,8 @@ const Booking = () => {
                         <SwiperSlide key={idx} className="!w-auto px-2">
                           <div
                             onClick={() => !isPastTime && setSelectedTime(showtime)}
-                            className={`py-2 px-4 rounded-full text-center
-                                  ${isPastTime ? "past-time" : "default-time border border-gray-500"} 
+                            className={`py-2 px-4 rounded-full text-center 
+                                  ${isPastTime ? "past-time" : "default-time border border-gray-500 cursor-pointer"} 
                                   ${selectedTime?.id === showtime.id ? "selected-time" : ""}`}
                           >
                             {dayjs(showtime.time, "HH:mm:ss").format("HH:mm")}
@@ -273,25 +298,30 @@ const Booking = () => {
           {dates.length > 0 && selectedTime?.id && (
             <div className="mt-10 flex justify-around items-center w-full pb-10">
               <div className="flex flex-col items-center">
-                <h1 className="text-sm font-light text-gray-400">
-                  {t("price")}
+                <h1 className="text-sm font-light text-gray-400">{t("price")}</h1>
+                <h1 className="text-lg font-semibold">
+                  {totalPrice.toLocaleString()}
                 </h1>
-                <h1 className="text-lg font-semibold">{totalPrice.toLocaleString()}</h1>
               </div>
 
               <div>
                 <button
                   onClick={handleBuyTicket}
-                  className="text-white bg-[#FF5524] text-lg px-5 py-2 rounded-[15px] hover:bg-[#FF5524]/80"
+                  disabled={selectedSeats.length === 0}
+                  className={`text-white text-lg px-5 py-2 rounded-[15px] transition duration-200 
+          ${selectedSeats.length === 0
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-[#FF5524] hover:bg-[#FF5524]/80 cursor-pointer"
+                    }`}
                 >
                   {t("buyTicket")}
                 </button>
               </div>
             </div>
           )}
+
         </div>
       </div>
-    </>
   );
 };
 

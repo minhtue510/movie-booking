@@ -39,6 +39,23 @@
     border: none;
     cursor: pointer;
   }
+
+  .sold-out-time {
+    background-color: #d1d5db; /* Màu xám cho suất chiếu đã bán hết */
+    color: #6b7280; /* Màu chữ xám cho trạng thái đã hết ghế */
+    cursor: not-allowed; /* Con trỏ khi di chuột qua sẽ là not-allowed */
+  }
+  
+  .disabled-time {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .full-time {
+    background-color: #f8d7da;
+    color: #721c24;
+    cursor: not-allowed;
+  }
   
 
   

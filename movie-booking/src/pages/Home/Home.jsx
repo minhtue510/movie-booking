@@ -7,16 +7,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchUserFromToken } from "../../redux/store/authSlice";
 import Header from "../../components/Header/Header";
 import { setMovies } from "../../redux/store/movieSlice";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const { nowPlaying, upcoming, popular, loaded } = useSelector((state) => state.movieCache);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAndSetMovies = async () => {
       const allMovies = await getMovies();
       const nowPlaying = [], upcoming = [], popular = [];
-
       allMovies.forEach((movie) => {
         if (movie.status === "playing") nowPlaying.push(movie);
         if (movie.status === "upcoming") upcoming.push(movie);
@@ -38,15 +39,21 @@ const Home = () => {
     }
   }, [dispatch, user]);
 
-  return (
-    <div className="bg-black min-h-screen text-white pb-16">
-      <Header />
 
+  const handleSearchBarClick = () => {
+    if (window.innerWidth <= 640) {
+      navigate("/search");
+    }
+  };
+  return (
+    <div className="bg-black min-h-screen text-white pb-16 ">
+      <div className="absolute top-8 sm:fixed sm:right-4 z-50 mt-20">
+      </div>
       <div className="p-5 md:hidden">
-        <SearchBar />
+        <SearchBar onClick={handleSearchBarClick} />
       </div>
 
-      <div className="px-5">
+      <div className="px-5 py-5">
         <>
           <MovieSection titleKey="nowPlaying" movies={nowPlaying} />
           <MovieSection titleKey="popular" movies={popular} />

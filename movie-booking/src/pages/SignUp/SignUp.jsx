@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { UserOutlined, MailOutlined, EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import { UserOutlined, MailOutlined, EyeInvisibleOutlined, EyeOutlined, CheckCircleOutlined } from "@ant-design/icons";
+import { Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 import { AuthUser } from "../../services/AuthUser";
 import background from "../../assets/images/background.png";
@@ -10,6 +11,7 @@ import facebookBtn from "../../assets/icon/facebook.png";
 import "../../pages/SignUp/SignUp.css";
 import Header from "../../components/Header/Header";
 import { useTranslation } from "react-i18next";
+import ChangeLanguage from "../../components/ChangeLanguage/ChangeLanguage";
 const SignUp = () => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
@@ -21,66 +23,115 @@ const SignUp = () => {
     const [usernameError, setUsernameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
+    const [generalError, setGeneralError] = useState("");
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const [verificationStatus, setVerificationStatus] = useState(null); // Trạng thái xác thực email
+    const [verificationMessage, setVerificationMessage] = useState("");
+
+    useEffect(() => {
+        // Lấy trạng thái xác thực từ URL hoặc state
+        const queryParams = new URLSearchParams(location.search);
+        const status = queryParams.get("status");
+        const message = queryParams.get("message");
+
+        if (status) {
+            setVerificationStatus(status);
+            setVerificationMessage(decodeURIComponent(message || ""));
+
+        }
+    }, [location]);
+
     const handleSignUp = async () => {
         setEmailError("");
         setUsernameError("");
         setPasswordError("");
         setConfirmPasswordError("");
-
-        let isValid = true;
-
+        setGeneralError("");
+        let hasError = false;
         if (!email) {
             setEmailError("Vui lòng nhập email.");
-            isValid = false;
+            hasError = true;
         }
 
         if (!username) {
             setUsernameError("Vui lòng nhập tên đăng nhập.");
-            isValid = false;
+            hasError = true;
         }
 
         if (!password) {
             setPasswordError("Vui lòng nhập mật khẩu.");
-            isValid = false;
+            hasError = true;
         }
 
         if (!confirmPassword) {
-            setConfirmPasswordError("Vui lòng nhập lại mật khẩu.");
-            isValid = false;
+            setConfirmPasswordError("Vui lòng xác nhận lại mật khẩu.");
+            hasError = true;
         } else if (password !== confirmPassword) {
             setConfirmPasswordError("Mật khẩu xác nhận không khớp.");
-            isValid = false;
+            hasError = true;
         }
 
-        if (!isValid) return;
+        if (hasError) return;
+
 
         try {
             await AuthUser.register(email, username, password, confirmPassword);
-            navigate("/login");
+            setVerificationStatus("success");
+            setVerificationMessage("Tạo tài khoản thành công. Vui lòng kiểm tra email để xác nhận tài khoản!");
+            setTimeout(() => {
+                setVerificationMessage("");
+                setVerificationStatus(null);
+            }, 5000);
         } catch (err) {
-            console.error("Đăng ký thất bại:", err);
-            setEmailError(err?.message || "Có lỗi xảy ra, vui lòng thử lại.");
+            if (err.email) setEmailError(err.email);
+            if (err.username) setUsernameError(err.username);
+            if (err.password) setPasswordError(err.password);
+            if (err.confirmPassword) setConfirmPasswordError(err.confirmPassword);
+            if (!err.email && !err.username && !err.password && !err.confirmPassword) {
+                setGeneralError(err.message || "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin!");
+            }
         }
     };
 
     return (
-        <>
-            <Header />
-        <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative">
-            <div className="absolute top-0 left-0 w-full h-[15%]">
+        <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative"
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    handleSignUp();
+                }
+            }}>
+            <div className="absolute top-0 left-0 w-full">
                 <img
                     src={background}
                     alt="Background"
-                    className="w-full h-full" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black"></div>
+                    className="w-full h-full object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black lg:bg-transparent"></div>
             </div>
 
-            <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-0 max-w-sm sm:max-w-sm md:max-w-md lg:max-w-lg text-center rounded-xl p-6 mt-[30%] sm:mt-[25%] md:mt-[15%] lg:mt-[5%] shadow-2xl">
+            <div className="absolute top-4 right-4 sm:hidden md:hidden block z-10 ">
+                <ChangeLanguage />
+            </div>
 
+            <div className="relative z-10 w-full 
+    max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 
+    text-center rounded-xl p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 
+    mt-[40%] sm:mt-[30%] md:mt-[20%] lg:mt-[10%] xl:mt-[5%] 
+    mb-10 sm:mb-12 md:mb-16 lg:mb-20 xl:mb-24 
+    shadow-2xl bg-black/50 backdrop-blur-md"
+            >
                 <h1 className="text-3xl font-semibold">{t("register.title")}</h1>
                 <p className="text-gray-400 text-sm mt-1">{t("register.subTitle")}</p>
+
+                {verificationStatus && (
+                    <div
+                        className={`mt-4 p-4 rounded-lg ${verificationStatus === "success" ? "bg-green-500" : "bg-red-500"
+                            } text-white`}
+                    >
+                        {verificationMessage}
+                    </div>
+                )}
 
                 <div className="mt-6 text-left">
                     <label className="block text-sm font-semibold text-[#A4A4A4]">{t("register.email")}</label>
@@ -93,7 +144,12 @@ const SignUp = () => {
                             placeholder={t("register.email")}
                             className="w-full py-3 pl-12 pr-4 bg-[#181818] text-gray-300 border border-white/50 rounded-lg focus:outline-none shadow-md"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                if (emailError) setEmailError("");
+                                if (generalError) setGeneralError("");
+
+                            }}
                         />
                     </div>
                     {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
@@ -110,13 +166,15 @@ const SignUp = () => {
                             placeholder={t("register.name")}
                             className="w-full py-3 pl-12 pr-4 bg-[#181818] text-gray-300 border border-white/50 rounded-lg focus:outline-none shadow-md"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                                if (usernameError) setUsernameError("");
+                                if (generalError) setGeneralError(""); // Xóa lỗi khi người dùng nhập
+                            }}
                         />
                     </div>
                     {usernameError && <p className="text-red-500 text-sm mt-1">{usernameError}</p>}
                 </div>
-
-
 
                 <div className="mt-4 text-left">
                     <label className="block text-sm font-semibold text-[#A4A4A4]" >{t("register.password")}</label>
@@ -129,7 +187,10 @@ const SignUp = () => {
                             placeholder={t("register.password")}
                             className="w-full py-3 pl-12 pr-4 bg-[#181818] border border-white/50 text-gray-300 rounded-lg focus:outline-none"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                if (passwordError) setPasswordError(""); // Xóa lỗi khi người dùng nhập
+                            }}
                         />
                         <span
                             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
@@ -138,7 +199,7 @@ const SignUp = () => {
                             {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                         </span>
                     </div>
-                    {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
+                    {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
                 </div>
 
                 <div className="mt-4 text-left">
@@ -152,7 +213,10 @@ const SignUp = () => {
                             placeholder={t("register.confirmPassword")}
                             className="w-full py-3 pl-12 pr-4 bg-[#181818] border border-white/50 text-gray-300 rounded-lg focus:outline-none"
                             value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            onChange={(e) => {
+                                setConfirmPassword(e.target.value);
+                                if (confirmPasswordError) setConfirmPasswordError("");
+                            }}
                         />
                         <span
                             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
@@ -163,31 +227,14 @@ const SignUp = () => {
                     </div>
                     {confirmPasswordError && <p className="text-red-500 text-sm mt-1">{confirmPasswordError}</p>}
                 </div>
-
+                {generalError && <p className="text-red-500 text-sm mt-5">{generalError}</p>}
                 <button
                     onClick={handleSignUp}
+
                     className="mt-6 w-full py-2 bg-gradient-to-r from-[#4D1C09] to-[#FFD980] rounded-xl text-lg font-semibold cursor-pointer"
                 >
                     {t("signUp")}
                 </button>
-                <div className="my-4 text-[#A4A4A4] flex items-center justify-center text-sm">
-                    <span className="w-1/4 border-t border-white"></span>
-                    <span className="mx-3 ">{t("register.another")}</span>
-                    <span className="w-1/4 border-t border-white"></span>
-                </div>
-
-                <div className="btn-container">
-                    <button className="btn-social">
-                        <img src={googleBtn} alt="Google" />
-                    </button>
-                    <button className="btn-social">
-                        <img src={appleBtn} alt="Apple" />
-                    </button>
-                    <button className="btn-social w-8 h-8">
-                        <img src={facebookBtn} alt="Facebook" />
-                    </button>
-                </div>
-
                 <div className="mt-6 text-sm text-gray-400 cursor-pointer hover:text-gray-300 relative z-20 !text-lg"
                     onClick={() => navigate("/login")}
                 >
@@ -195,7 +242,6 @@ const SignUp = () => {
                 </div>
             </div>
         </div>
-        </>
     );
 };
 

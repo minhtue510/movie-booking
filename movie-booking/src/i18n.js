@@ -1,7 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import en from './locales/en.json'; // tiếng Anh
-import vi from './locales/vi.json'; // tiếng Việt
+import en from './locales/en.json'; 
+import vi from './locales/vi.json';
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -12,10 +12,10 @@ i18n.use(initReactI18next).init({
       translation: vi,
     },
   },
-  lng: 'vi', // Ngôn ngữ mặc định
-  fallbackLng: 'en', // Ngôn ngữ dự phòng nếu không tìm thấy
+  lng: 'vi',
+  fallbackLng: 'en', 
   interpolation: {
-    escapeValue: false, // Không cần escape khi sử dụng JSX
+    escapeValue: false, 
   },
 });
 

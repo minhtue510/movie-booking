@@ -30,8 +30,7 @@ const OrderHistory = () => {
 
   return (
     <>
-      <Header />
-      <div className="bg-black min-h-screen text-white px-4 sm:px-6 md:px-10 ">
+      <div className="bg-black min-h-screen text-white px-4 sm:px-6 md:px-10 pb-16">
         <h1 className="text-xl pt-10 pb-10 text-center ">
           {t("ticket.history")}
         </h1>
@@ -53,7 +52,7 @@ const OrderHistory = () => {
             ))}
           </div>
         ) : tickets.length === 0 ? (
-          <p>{t("no.tickets")}</p>
+          <p>{t("ticket.empty")}</p>
         ) : (
           <>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-x-4 gap-y-6 justify-center">
@@ -87,6 +86,7 @@ const OrderHistory = () => {
             </div>
           </>
         )}
+
       </div>
       <BottomNav />
     </>

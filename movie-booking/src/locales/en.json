@@ -29,7 +29,8 @@
         "password": "Password",
         "logging": "Signing in...",
         "another": "Or continue with",
-        "guest": "Don't have an account ?"
+        "guest": "Don't have an account ?",
+        "forgotPassword": "Forgot Password?"
     },
     "register": {
         "title": "Get Start Free",
@@ -48,6 +49,8 @@
         "popular": "Popular",
         "upcoming": "Upcoming"
     },
+    "searchResult": "Search Result",
+    "searchEmpty": "No movies match.",
     "searchPlaceholder": "Search your Movies...",
     "topCast": "Top Cast",
     "selectSeat": "Select Seat",
@@ -80,5 +83,29 @@
         "sun": "Sun"
     },
     "noShowtime": "No showtimes available now",
-    "futureShowtime": "No showtimes information" 
+    "futureShowtime": "No showtimes information",
+    "back": "Back",
+    "edit": {
+        "fullName": "Full Name",
+        "phone": "Mobile Number",
+        "save": "Save",
+        "isSaving": "Saving...",
+        "success": "Updated successfully",
+        "fail": "Update failed",
+        "enterFullName": "Please enter your full name",
+        "enterPhone": "Please enter your phone number"
+
+    },
+    "password": {
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password",
+        "reset": "Change Password",
+        "isChanging": "Changing...",
+        "success": "Password changed successfully",
+        "fail": "Password change failed",
+        "enterCurrentPassword": "Please enter your current password",
+        "enterNewPassword": "Please enter your new password",
+        "enterConfirmPassword": "Please confirm your new password"
+    }
 }

@@ -29,10 +29,11 @@
         "password": "Mật khẩu",
         "logging": "Đang đăng nhập...",
         "another": "Hoặc tiếp tục với",
-        "guest": "Không có tài khoản ?"
+        "guest": "Không có tài khoản ?",
+        "forgotPassword": "Quên mật khẩu?"
     },
     "register": {
-        "title": "Bắt đầu hoàn toàn miễn phí",
+        "title": "Bắt đầu miễn phí",
         "subTitle": "Miễn phí hoàn toàn.",
         "email": "Địa chỉ Email",
         "name": "Tên tài khoản",
@@ -67,6 +68,8 @@
         "empty": "Bạn chưa đặt vé nào.",
         "history": "Lịch sử đặt vé"
     },
+    "searchResult": "Kết quả tìm kiếm",
+    "searchEmpty": "Không có phim nào phù hợp.",
     "loading": "Đang tải dữ liệu...",
     "genres": {
         "Action": "Hành động",
@@ -79,14 +82,38 @@
         "Adventure": "Phiêu lưu"
     },
     "days": {
-        "mon": "Thứ 2",
-        "tue": "Thứ 3",
-        "wed": "Thứ 4",
-        "thu": "Thứ 5",
-        "fri": "Thứ 6",
-        "sat": "Thứ 7",
+        "mon": "T.2",
+        "tue": "T.3",
+        "wed": "T.4",
+        "thu": "T.5",
+        "fri": "T.6",
+        "sat": "T.7",
         "sun": "CN"
     },
-    "noShowtime": "Tạm thời không có suất chiếu",
-    "futureShowtime": "Chưa có thông tin suất chiếu"
+    "noShowtime": "Phim tạm thời chưa có suất chiếu",
+    "futureShowtime": "Chưa có thông tin suất chiếu",
+    "back": "Trở lại",
+    "edit": {
+        "fullName": "Họ và tên",
+        "phone": "Số điện thoại",
+        "save": "Lưu",
+        "isSaving": "Đang lưu...",
+        "success": "Cập nhật thành công",
+        "fail": "Cập nhật thất bại",
+        "enterFullName": "Nhập họ và tên",
+        "enterPhone": "Nhập số điện thoại"
+    },
+    "password": {
+        "currentPassword": "Mật khẩu hiện tại",
+        "newPassword": "Mật khẩu mới",
+        "confirmPassword": "Xác thực mật khẩu mới",
+        "reset": "Đổi mật khẩu",
+        "isChanging": "Đang đổi...",
+        "success": "Đổi mật khẩu thành công",
+        "fail": "Đổi mật khẩu thất bại",
+        "enterCurrentPassword": "Nhập mật khẩu hiện tại",
+        "enterNewPassword": "Nhập mật khẩu mới",
+        "enterConfirmPassword": "Nhập xác thực mật khẩu mới",
+        "isReseting": "Đang đổi mật khẩu"
+    }
 }

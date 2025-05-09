@@ -8,11 +8,11 @@ import userIcon from "../../assets/icon/user.jpg";
 const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 639);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 639);
     };
 
     window.addEventListener("resize", handleResize);
@@ -22,7 +22,7 @@ const BottomNav = () => {
   if (!isMobile) return null; 
 
   const navItems = [
-    { path: "/home", icon: homeIcon, label: "Home" },
+    { path: "/", icon: homeIcon, label: "Home" },
     { path: "/search", icon: searchIcon, label: "Search" },
     { path: "/history", icon: ticketIcon, label: "History" },
     { path: "/profile", icon: userIcon, label: "User" },

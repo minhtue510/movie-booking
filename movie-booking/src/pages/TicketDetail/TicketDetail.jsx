@@ -53,8 +53,6 @@ const TicketDetail = () => {
   }, [id]);
 
   return (
-    <>
-      <Header />
       <div className="bg-black h-screen flex flex-col items-center p-4 text-white relative overflow-hidden block">
         <h1 className="text-xl font-bold pb-4">{t("myTickets")}</h1>
         <button
@@ -132,8 +130,8 @@ const TicketDetail = () => {
             })
           )}
         </div>
+
       </div>
-    </>
   );  
 };
 

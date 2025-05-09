@@ -12,7 +12,6 @@ const PaymentCallback = () => {
     const background = searchParams.get("background");
 
     if (success === "true" && orderId) {
-      console.log("Thanh toán thành công, orderId:", orderId);
       navigate(`/tickets/ticket/${orderId}`);
     } else {
       console.warn("Thanh toán thất bại hoặc bị hủy.");
